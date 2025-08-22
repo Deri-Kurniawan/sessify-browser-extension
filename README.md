@@ -1,52 +1,59 @@
-# React + Vite + CRXJS
+# Sessify
 
-This template helps you quickly start developing Chrome extensions with React, TypeScript and Vite. It includes the CRXJS Vite plugin for seamless Chrome extension development.
+Chrome extension for managing and switching between multiple browser sessions efficiently.
 
-## Features
+---
 
-- React with TypeScript
-- TypeScript support
-- Vite build tool
-- CRXJS Vite plugin integration
-- Chrome extension manifest configuration
+## 🚀 Features
 
-## Quick Start
+- 🔄 Quickly switch between multiple sessions/accounts
+- 👤 Manage independent browser contexts
+- ⚡ Built with [React 19](https://react.dev/), [Vite](https://vitejs.dev/), and [Tailwind CSS](https://tailwindcss.com/)
+- 🧩 Powered by [CRXJS](https://crxjs.dev/vite-plugin) for smooth Chrome extension development
 
-1. Install dependencies:
+---
+
+## 📦 Tech Stack
+
+- [React 19](https://react.dev/)
+- [Vite](https://vitejs.dev/)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [CRXJS](https://crxjs.dev/vite-plugin)
+- [TypeScript](https://www.typescriptlang.org/)
+
+---
+
+## 🛠️ Development
+
+Clone the repository and install dependencies:
 
 ```bash
-npm install
+git clone https://github.com/yourusername/sessify.git
+cd sessify
+bun install
 ```
 
-2. Start development server:
+Run the development server:
 
 ```bash
-npm run dev
+bun run dev
 ```
 
-3. Open Chrome and navigate to `chrome://extensions/`, enable "Developer mode", and load the unpacked extension from the `dist` directory.
-
-4. Build for production:
+Build the extension:
 
 ```bash
-npm run build
+bun run build
 ```
 
-## Project Structure
+Load the extension in Chrome:
 
-- `src/popup/` - Extension popup UI
-- `src/content/` - Content scripts
-- `manifest.config.ts` - Chrome extension manifest configuration
+1. Open Chrome and go to `chrome://extensions/`
+2. Enable "Developer mode"
+3. Click "Load unpacked" and select the `dist` directory
+4. Enjoy managing your sessions!
 
-## Documentation
+---
 
-- [React Documentation](https://reactjs.org/)
-- [Vite Documentation](https://vitejs.dev/)
-- [CRXJS Documentation](https://crxjs.dev/vite-plugin)
+## 📄 License
 
-## Chrome Extension Development Notes
-
-- Use `manifest.config.ts` to configure your extension
-- The CRXJS plugin automatically handles manifest generation
-- Content scripts should be placed in `src/content/`
-- Popup UI should be placed in `src/popup/`
+This project is licensed under the [MIT License](https://opensource.org/license/mit/). See the [LICENSE](LICENSE) file for details.
