@@ -1,6 +1,7 @@
 {
   "name": "sessify",
-  "description": "Chrome extension for managing and switching between multiple browser sessions efficiently.",
+  "launcherName": "Sessify",
+  "description": "Streamline your workflow by effortlessly managing and switching between multiple browser sessions. Save and organize groups of tabs, instantly switch between different environments for work or personal use, and keep your accounts separate and secure. This extension is perfect for developers, marketers, and anyone who juggles multiple accounts.",
   "type": "module",
   "version": "1.0.0",
   "private": true,
