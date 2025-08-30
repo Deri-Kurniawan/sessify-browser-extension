@@ -1,9 +1,9 @@
 /// <reference types="chrome"/>
-/// <reference path="./types/globals.d.ts"/>
+/// <reference path="../types/globals.d.ts"/>
 
 import { CONFIGS } from "@/config";
 import { BrowserTabs, SiteStorage, Storage } from "@/lib/utils";
-import { handleError } from "./lib/utils";
+import { handleError } from "../lib/utils";
 
 class SessifyExtension {
   init(): void {

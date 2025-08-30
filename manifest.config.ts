@@ -26,7 +26,7 @@ export default defineManifest({
     default_popup: "src/popup/index.html",
   },
   background: {
-    service_worker: "src/background.ts",
+    service_worker: "src/background/background.ts",
   },
   permissions: [
     "sidePanel",
