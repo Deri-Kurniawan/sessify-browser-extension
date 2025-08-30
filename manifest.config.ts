@@ -5,6 +5,10 @@ export default defineManifest({
   manifest_version: 3,
   name: pkg.launcherName || pkg.name,
   description: pkg.description,
+  author: {
+    email: pkg.author.email,
+  },
+  homepage_url: pkg.homepage || "",
   version: pkg.version,
   icons: {
     16: "public/icon16.png",
