@@ -11,7 +11,7 @@ container.style.display = "none";
 container.style.pointerEvents = "none";
 document.body.appendChild(container);
 createRoot(container).render(
-  <StrictMode>
-    <App />
-  </StrictMode>
+	<StrictMode>
+		<App />
+	</StrictMode>,
 );

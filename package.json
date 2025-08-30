@@ -18,7 +18,11 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "lint": "biome check ./src",
+    "lint:write": "biome check --write ./src",
+    "format": "biome format ./src",
+    "format:write": "biome format --write ./src"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.15",
@@ -37,6 +41,7 @@
     "tailwindcss": "^4.1.12"
   },
   "devDependencies": {
+    "@biomejs/biome": "2.2.2",
     "@crxjs/vite-plugin": "^2.0.3",
     "@types/chrome": "^0.1.1",
     "@types/node": "^24.3.0",
