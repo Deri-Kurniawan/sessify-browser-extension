@@ -1,3 +1,5 @@
+import AppPopup from "@/popup/App";
+
 export default function App() {
-  return <div>Sidepanel</div>;
+  return <AppPopup launchType="sidepanel" />;
 }
