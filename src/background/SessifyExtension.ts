@@ -1,6 +1,7 @@
 /// <reference types="chrome"/>
 /// <reference path="../types/globals.d.ts"/>
 
+import moment from "moment";
 import { parse as tldtsParse } from "tldts";
 import { CONFIGS } from "@/config";
 import { BrowserTabs, SiteStorage, Storage } from "@/lib/utils";
@@ -111,7 +112,7 @@ class SessifyExtension {
 							const newSession: AppSession = {
 								id: crypto.randomUUID(),
 								appIconUrl: currentTab.favIconUrl || "/public/icon32.png",
-								title: title || new Date().toLocaleString(),
+								title: title || moment().format("MMM D, YYYY, h:mm:ss"),
 								domain: {
 									domain: parsed.domain || "",
 									subdomain: parsed.subdomain || "",
