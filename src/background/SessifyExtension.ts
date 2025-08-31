@@ -1,6 +1,7 @@
 /// <reference types="chrome"/>
 /// <reference path="../types/globals.d.ts"/>
 
+import { parse as tldtsParse } from "tldts";
 import { CONFIGS } from "@/config";
 import { BrowserTabs, SiteStorage, Storage } from "@/lib/utils";
 import { handleError } from "../lib/utils";
@@ -41,17 +42,53 @@ class SessifyExtension {
 							);
 							const filteredSessions = (
 								sessions?.filter((s) => {
-									const sessionDomain = s.domain.toLowerCase();
-									const currentHost = url.hostname.toLowerCase();
-									return (
-										currentHost === sessionDomain ||
-										currentHost.endsWith(`.${sessionDomain}`)
-									);
+									const currentHost = url.hostname;
+
+									// Handle localhost
+									if (
+										currentHost === "localhost" &&
+										s.domain.sld === "localhost"
+									) {
+										return true;
+									}
+
+									// Handle IP addresses
+									if (/^\d{1,3}(\.\d{1,3}){3}$/.test(currentHost)) {
+										return currentHost === s.domain.fqdn;
+									}
+
+									const sessionRegistered = s.domain.domain.toLowerCase();
+									const currentRegistered =
+										tldtsParse(currentHost).domain?.toLowerCase() || "";
+
+									if (currentRegistered === sessionRegistered) return true;
+									if (currentHost.endsWith(`.${sessionRegistered}`))
+										return true;
+
+									return false;
 								}) || []
-							).map((s) => ({
-								...s,
-								appIconUrl: currentTab.favIconUrl || s.appIconUrl,
-							}));
+							)
+								.map((session) => {
+									// Only update appIconUrl if exact FQDN match
+									if (url.hostname === session.domain.fqdn) {
+										return {
+											...session,
+											appIconUrl: currentTab.favIconUrl || session.appIconUrl,
+										};
+									}
+									return session;
+								})
+								// sort: exact fqdn match first, then by createdAt desc
+								.sort((a, b) => {
+									const aExact = a.domain.fqdn === url.hostname ? 1 : 0;
+									const bExact = b.domain.fqdn === url.hostname ? 1 : 0;
+
+									if (aExact !== bExact) {
+										return bExact - aExact; // exact domain match first
+									}
+									return b.createdAt - a.createdAt; // newest first
+								});
+
 							response = {
 								success: true,
 								message: "Sessions retrieved successfully",
@@ -70,11 +107,20 @@ class SessifyExtension {
 							}
 							const url = new URL(currentTab.url);
 							const siteStorage = await SiteStorage.getStorageFromCurrentTab();
+							const parsed = tldtsParse(currentTab.url);
 							const newSession: AppSession = {
 								id: crypto.randomUUID(),
 								appIconUrl: currentTab.favIconUrl || "/public/icon32.png",
 								title: title || new Date().toLocaleString(),
-								domain: url.host,
+								domain: {
+									domain: parsed.domain || "",
+									subdomain: parsed.subdomain || "",
+									sld: parsed.domainWithoutSuffix || "",
+									tld: parsed.publicSuffix || "",
+									fqdn: parsed.hostname || url.hostname,
+									isIp: parsed.isIp || false,
+									isIcann: parsed.isIcann || false,
+								},
 								createdAt: Date.now(),
 								updatedAt: Date.now(),
 								state: {

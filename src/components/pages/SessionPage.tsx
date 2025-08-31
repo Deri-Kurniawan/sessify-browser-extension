@@ -121,7 +121,7 @@ const SessionPage = () => {
 							{session.title}
 						</span>
 						<span className="text-sm text-gray-500 line-clamp-1">
-							{session.domain}
+							{session.domain.fqdn}
 						</span>
 					</div>
 					{/** biome-ignore lint/a11y/noStaticElementInteractions: we need to use stopPropagation */}
@@ -234,9 +234,6 @@ const SessionPage = () => {
 			<ContentWrapper className="overflow-y-scroll transition-all duration-200 ease-in-out">
 				{sessions.length > 0 ? (
 					<ul className="grid w-full grid-cols-1 gap-4 p-4 transition-all duration-200 ease-in-out sm:grid-cols-2 lg:grid-cols-3">
-						{sessions.map((session) => (
-							<SessionItem key={session.id} session={session} />
-						))}
 						<li className="col-span-full">
 							<Button
 								variant="outline"
@@ -247,6 +244,9 @@ const SessionPage = () => {
 								Save New Session
 							</Button>
 						</li>
+						{sessions.map((session) => (
+							<SessionItem key={session.id} session={session} />
+						))}
 					</ul>
 				) : (
 					<div className="flex items-center justify-center size-full">

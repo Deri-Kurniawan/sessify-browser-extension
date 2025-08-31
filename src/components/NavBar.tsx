@@ -28,8 +28,11 @@ const NavBar: FC<NavBarProps> = ({ className, ...props }) => {
 							to={link.to}
 							className={({ isActive }) =>
 								cn(
-									"flex flex-col items-center justify-center gap-1 p-4 bg-white cursor-pointer size-full hover:bg-neutral-100",
-									isActive && "[&>span]:font-semibold bg-neutral-50",
+									"flex flex-col items-center justify-center gap-1 p-4 size-full",
+									"transition duration-150 ease-in-out",
+									"bg-white hover:bg-neutral-100 text-primary/80 hover:text-primary/90",
+									"cursor-pointer",
+									isActive && "[&>span]:font-medium bg-neutral-50 text-primary",
 								)
 							}
 						>
