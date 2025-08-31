@@ -70,6 +70,7 @@ const SessionProvider: FC<{
 	const createNewSession = useCallback(async () => {
 		const res = await sendMessage({ action: "CREATE_NEW_SESSION" });
 		if (res.success) {
+			setActiveSessionId("");
 			return res;
 		}
 

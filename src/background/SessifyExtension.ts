@@ -137,6 +137,10 @@ class SessifyExtension {
 								CONFIGS.SESSION_STORAGE.KEYS.SESSIONS,
 								updatedSessions,
 							);
+							await Storage.set(
+								CONFIGS.SESSION_STORAGE.KEYS.ACTIVE_SESSION_ID,
+								newSession.id,
+							);
 							response = {
 								success: true,
 								message: "Session saved successfully",
@@ -210,6 +214,9 @@ class SessifyExtension {
 								break;
 							}
 							await SiteStorage.clearStorageForCurrentTab();
+							await Storage.remove(
+								CONFIGS.SESSION_STORAGE.KEYS.ACTIVE_SESSION_ID,
+							);
 							response = {
 								success: true,
 								message: "New session created successfully",
