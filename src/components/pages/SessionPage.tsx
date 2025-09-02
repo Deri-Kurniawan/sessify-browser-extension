@@ -43,7 +43,11 @@ const SessionPage = () => {
 	const handleClickSaveSession = useCallback(async () => {
 		saveNewSession().then((res) => {
 			if (!res.success) {
-				toast.error(`Failed to save session: ${res.message}`);
+				toast.error(
+					res.message
+						? `Could not save session: ${res.message}`
+						: "Could not save session. Please try again.",
+				);
 				return;
 			}
 			loadSessions();
@@ -54,7 +58,11 @@ const SessionPage = () => {
 		(id: string) => {
 			deleteSessionById(id).then((res) => {
 				if (!res.success) {
-					toast.error(`Failed to delete session: ${res.message}`);
+					toast.error(
+						res.message
+							? `Could not delete session: ${res.message}`
+							: "Could not delete session. Please try again.",
+					);
 					return;
 				}
 				loadSessions();

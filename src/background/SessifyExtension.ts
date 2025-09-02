@@ -37,7 +37,30 @@ class SessifyExtension {
 								response = { success: false, message: "No active tab found" };
 								break;
 							}
-							const url = new URL(currentTab.url);
+							let url: URL | null = null;
+							try {
+								url = new URL(currentTab.url);
+							} catch {
+								response = {
+									success: false,
+									message:
+										"Session management is not supported on non-http/https pages.",
+								};
+								break;
+							}
+							// Only allow http/https/localhost
+							const allowedProtocols = ["http:", "https:"];
+							if (
+								!allowedProtocols.includes(url.protocol) &&
+								url.hostname !== "localhost"
+							) {
+								response = {
+									success: false,
+									message:
+										"Session management is only supported for http, https, and localhost pages.",
+								};
+								break;
+							}
 							const sessions = await Storage.get<AppSession[]>(
 								CONFIGS.SESSION_STORAGE.KEYS.SESSIONS,
 							);
@@ -107,20 +130,45 @@ class SessifyExtension {
 								break;
 							}
 							const url = new URL(currentTab.url);
-							const siteStorage = await SiteStorage.getStorageFromCurrentTab();
-							const parsed = tldtsParse(currentTab.url);
+							const parsedUrl = tldtsParse(currentTab.url);
+							const allowedProtocols = ["http:", "https:"];
+
+							if (!allowedProtocols.includes(url.protocol)) {
+								response = {
+									success: false,
+									message:
+										"Saving session on this type of page is not supported.",
+								};
+								break;
+							}
+							let siteStorage: {
+								localStorage: Record<string, string>;
+								sessionStorage: Record<string, string>;
+								cookies: chrome.cookies.Cookie[];
+							};
+							try {
+								siteStorage = await SiteStorage.getStorageFromCurrentTab();
+							} catch (err) {
+								handleError("getSiteStorageFromCurrentTab", err);
+								response = {
+									success: false,
+									message:
+										"Saving session on this type of page is not supported.",
+								};
+								break;
+							}
 							const newSession: AppSession = {
 								id: crypto.randomUUID(),
 								appIconUrl: currentTab.favIconUrl || "/public/icon32.png",
 								title: title || moment().format("MMM D, YYYY, h:mm:ss"),
 								domain: {
-									domain: parsed.domain || "",
-									subdomain: parsed.subdomain || "",
-									sld: parsed.domainWithoutSuffix || "",
-									tld: parsed.publicSuffix || "",
-									fqdn: parsed.hostname || url.hostname,
-									isIp: parsed.isIp || false,
-									isIcann: parsed.isIcann || false,
+									domain: parsedUrl.domain || "",
+									subdomain: parsedUrl.subdomain || "",
+									sld: parsedUrl.domainWithoutSuffix || "",
+									tld: parsedUrl.publicSuffix || "",
+									fqdn: parsedUrl.hostname || url.hostname,
+									isIp: parsedUrl.isIp || false,
+									isIcann: parsedUrl.isIcann || false,
 								},
 								createdAt: Date.now(),
 								updatedAt: Date.now(),
@@ -304,7 +352,7 @@ class SessifyExtension {
 	}
 }
 
-class SessifyExtensionError extends Error {
+export class SessifyExtensionError extends Error {
 	constructor(
 		message: string,
 		public originalError?: unknown,

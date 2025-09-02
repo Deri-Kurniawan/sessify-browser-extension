@@ -48,7 +48,11 @@ const SessionProvider: FC<{
 			setSessions(res.data);
 			return res;
 		} else {
-			setError(res.message || "Failed to load data");
+			setError(
+				res.message
+					? `Could not load sessions: ${res.message}`
+					: "Could not load sessions. Please try again.",
+			);
 			return res;
 		}
 	}, []);
@@ -62,7 +66,11 @@ const SessionProvider: FC<{
 			setActiveSessionId(res.data);
 			return res;
 		} else {
-			setError(res.message || "Failed to load active session");
+			setError(
+				res.message
+					? `Could not load active session: ${res.message}`
+					: "Could not load active session. Please try again.",
+			);
 			return res;
 		}
 	}, []);
@@ -74,7 +82,11 @@ const SessionProvider: FC<{
 			return res;
 		}
 
-		setError(res.message);
+		setError(
+			res.message
+				? `Could not create new session: ${res.message}`
+				: "Could not create new session. Please try again.",
+		);
 		return res;
 	}, []);
 
@@ -83,7 +95,11 @@ const SessionProvider: FC<{
 		if (res.success) {
 			return res;
 		}
-		setError(res.message);
+		setError(
+			res.message
+				? `Could not refresh tab: ${res.message}`
+				: "Could not refresh tab. Please try again.",
+		);
 		return res;
 	}, []);
 
@@ -98,7 +114,11 @@ const SessionProvider: FC<{
 				setActiveSessionId(res.data!.id);
 				return res;
 			} else {
-				setError(res.message || "Failed to save session");
+				setError(
+					res.message
+						? `Could not save session: ${res.message}`
+						: "Could not save session. Please try again.",
+				);
 				return res;
 			}
 		},
@@ -113,7 +133,11 @@ const SessionProvider: FC<{
 		if (res.success) {
 			return res;
 		} else {
-			setError(res.message || "Failed to switch session");
+			setError(
+				res.message
+					? `Could not switch session: ${res.message}`
+					: "Could not switch session. Please try again.",
+			);
 			return res;
 		}
 	}, []);
@@ -129,7 +153,11 @@ const SessionProvider: FC<{
 			setSessions((prev) => prev.filter((s) => s.id !== id));
 			return res;
 		} else {
-			setError(res.message || "Failed to delete session");
+			setError(
+				res.message
+					? `Could not delete session: ${res.message}`
+					: "Could not delete session. Please try again.",
+			);
 			return res;
 		}
 	}, []);
