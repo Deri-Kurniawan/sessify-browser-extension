@@ -13,7 +13,15 @@ class SessifyExtension {
 			chrome.runtime.getManifest().homepage_url as string,
 		);
 
+		chrome.action.setBadgeTextColor({
+			color: CONFIGS.BADGE.COLORS.TEXT.DEFAULT,
+		});
+		chrome.action.setBadgeBackgroundColor({
+			color: CONFIGS.BADGE.COLORS.BACKGROUND.ACTIVE,
+		});
+
 		this._registerListeners();
+		this._updateBadgeForActiveTab();
 	}
 
 	private _registerListeners(): void {
@@ -118,6 +126,7 @@ class SessifyExtension {
 								message: "Sessions retrieved successfully",
 								data: filteredSessions,
 							};
+							this._updateBadgeForActiveTab();
 							break;
 						}
 						case "SAVE_CURRENT_TAB_STORAGE_TO_EXTENSION_STORAGE": {
@@ -194,6 +203,7 @@ class SessifyExtension {
 								message: "Session saved successfully",
 								data: newSession,
 							};
+							this._updateBadgeForActiveTab();
 							break;
 						}
 						case "SWITCH_SESSION_BY_ID": {
@@ -227,6 +237,7 @@ class SessifyExtension {
 								message: "Session switched successfully",
 								data: sessionId,
 							};
+							this._updateBadgeForActiveTab();
 							break;
 						}
 						case "UPDATE_SESSION_BY_ID": {
@@ -272,6 +283,7 @@ class SessifyExtension {
 								message: "Session updated successfully",
 								data: updatedSession,
 							};
+							this._updateBadgeForActiveTab();
 							break;
 						}
 						case "DELETE_SESSION_BY_ID": {
@@ -298,6 +310,7 @@ class SessifyExtension {
 								message: "Session deleted successfully",
 								data: sessionId,
 							};
+							this._updateBadgeForActiveTab();
 							break;
 						}
 						case "CREATE_NEW_SESSION": {
@@ -314,6 +327,7 @@ class SessifyExtension {
 								success: true,
 								message: "New session created successfully",
 							};
+							this._updateBadgeForActiveTab();
 							break;
 						}
 						case "REFRESH_CURRENT_TAB": {
@@ -371,12 +385,78 @@ class SessifyExtension {
 			 */
 			return true;
 		});
+
+		chrome.tabs.onActivated.addListener(() => this._updateBadgeForActiveTab());
+		chrome.tabs.onUpdated.addListener(() => this._updateBadgeForActiveTab());
 	}
 
 	private get _isChrome(): boolean {
 		return (
 			typeof chrome !== "undefined" && !!chrome.runtime && !!chrome.runtime.id
 		);
+	}
+
+	private _updateBadgeForActiveTab(): void {
+		(async () => {
+			try {
+				const currentTab = await BrowserTabs.getCurrentActive();
+				if (!currentTab?.url) {
+					chrome.action.setBadgeText({ text: "" });
+					return;
+				}
+				let url: URL | null = null;
+				try {
+					url = new URL(currentTab.url);
+				} catch {
+					chrome.action.setBadgeText({ text: "" });
+					return;
+				}
+				// Only allow http/https/localhost
+				const allowedProtocols = ["http:", "https:"];
+				if (
+					!allowedProtocols.includes(url.protocol) &&
+					url.hostname !== "localhost"
+				) {
+					chrome.action.setBadgeText({ text: "" });
+					return;
+				}
+				const sessions = await Storage.get<AppSession[]>(
+					CONFIGS.SESSION_STORAGE.KEYS.SESSIONS,
+				);
+				const filteredSessions =
+					sessions?.filter((s) => {
+						const currentHost = url.hostname;
+
+						// Handle localhost
+						if (currentHost === "localhost" && s.domain.sld === "localhost") {
+							return true;
+						}
+
+						// Handle IP addresses
+						if (/^\d{1,3}(\.\d{1,3}){3}$/.test(currentHost)) {
+							return currentHost === s.domain.fqdn;
+						}
+
+						const sessionRegistered = s.domain.domain.toLowerCase();
+						const currentRegistered =
+							tldtsParse(currentHost).domain?.toLowerCase() || "";
+
+						if (currentRegistered === sessionRegistered) return true;
+						if (currentHost.endsWith(`.${sessionRegistered}`)) return true;
+
+						return false;
+					}) || [];
+
+				const text =
+					filteredSessions.length > CONFIGS.BADGE.MAX_COUNT
+						? `${CONFIGS.BADGE.MAX_COUNT}+`
+						: filteredSessions.length.toString();
+				chrome.action.setBadgeText({ text });
+			} catch (error) {
+				handleError("_updateBadgeForActiveTab", error);
+				chrome.action.setBadgeText({ text: "" });
+			}
+		})();
 	}
 
 	static createResponse<T = unknown>(

@@ -5,4 +5,15 @@ export const CONFIGS = {
 			ACTIVE_SESSION_ID: "activeSessionId",
 		},
 	},
+	BADGE: {
+		COLORS: {
+			BACKGROUND: {
+				ACTIVE: "#000000",
+			},
+			TEXT: {
+				DEFAULT: "#FFFFFF",
+			},
+		},
+		MAX_COUNT: 99,
+	},
 };
