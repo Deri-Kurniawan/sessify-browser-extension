@@ -1,3 +1,4 @@
+import { SettingsIcon, UsersIcon } from "lucide-react";
 import type { FC } from "react";
 import { Outlet } from "react-router";
 import NavBar from "../NavBar";
@@ -21,7 +22,20 @@ const RootLayout: FC<RootLayoutProps> = ({ launchType = "sidepanel" }) => {
 		<div className={containerClass}>
 			<div className="flex flex-col h-screen">
 				<Outlet />
-				<NavBar />
+				<NavBar
+					data={[
+						{
+							to: "/",
+							icon: <UsersIcon className="size-6" />,
+							label: "Sessions",
+						},
+						{
+							to: "/settings",
+							icon: <SettingsIcon className="size-6" />,
+							label: "Settings",
+						},
+					]}
+				/>
 			</div>
 			<Toaster position="top-right" richColors closeButton />
 		</div>

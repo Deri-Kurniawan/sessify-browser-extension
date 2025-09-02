@@ -18,6 +18,7 @@ const App: FC<AppProps> = ({ launchType = "popup" }) => {
 				{
 					path: "/",
 					Component: SessionPage,
+					index: true,
 				},
 				{
 					path: "/settings",

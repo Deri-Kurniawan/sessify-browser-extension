@@ -1,28 +1,20 @@
-import { SettingsIcon, UsersIcon } from "lucide-react";
 import type { FC, HTMLAttributes } from "react";
 import { NavLink } from "react-router";
 import { cn } from "@/lib/utils";
 
-interface NavBarProps extends HTMLAttributes<HTMLElement> {}
+interface NavBarProps extends HTMLAttributes<HTMLElement> {
+	data: {
+		to: string;
+		icon: React.ReactNode;
+		label: string;
+	}[];
+}
 
-const NavBar: FC<NavBarProps> = ({ className, ...props }) => {
-	const navLinks = [
-		{
-			to: "/",
-			icon: <UsersIcon className="size-6" />,
-			label: "Sessions",
-		},
-		{
-			to: "/settings",
-			icon: <SettingsIcon className="size-6" />,
-			label: "Settings",
-		},
-	];
-
+const NavBar: FC<NavBarProps> = ({ data, className, ...props }) => {
 	return (
 		<nav {...props} className={cn("w-full z-50", className)}>
 			<ul className="flex justify-around">
-				{navLinks.map((link, index) => (
+				{data.map((link, index) => (
 					<li key={`${link.label}${index}`} className="size-full">
 						<NavLink
 							to={link.to}
