@@ -1,4 +1,5 @@
 import {
+	BadgeInfoIcon,
 	PlusIcon,
 	SaveIcon,
 	Trash2Icon,
@@ -26,6 +27,7 @@ import Placeholder, {
 	PlaceholderIcon,
 	PlaceholderTitle,
 } from "../Placeholder";
+import EditSessionDialog from "../SessionDetailDialog";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
 const SessionPage = () => {
@@ -54,7 +56,7 @@ const SessionPage = () => {
 		});
 	}, [loadSessions, saveNewSession]);
 
-	const handleDelelteSessionById = useCallback(
+	const handleDeleteSessionById = useCallback(
 		(id: string) => {
 			deleteSessionById(id).then((res) => {
 				if (!res.success) {
@@ -138,6 +140,17 @@ const SessionPage = () => {
 						onClick={(e) => e.stopPropagation()}
 						onKeyDown={(e) => e.stopPropagation()}
 					>
+						<EditSessionDialog id={session.id}>
+							<Button
+								size="icon"
+								variant="ghost"
+								className="text-blue-500 hover:text-blue-600"
+								aria-label={`Edit ${session.title}`}
+							>
+								<BadgeInfoIcon className="size-5" />
+								<span className="sr-only">Edit Session</span>
+							</Button>
+						</EditSessionDialog>
 						<Dialog>
 							<Tooltip delayDuration={1000}>
 								<TooltipTrigger asChild>
@@ -173,7 +186,7 @@ const SessionPage = () => {
 									<DialogClose asChild>
 										<Button
 											variant={"destructive"}
-											onClick={() => handleDelelteSessionById(session.id)}
+											onClick={() => handleDeleteSessionById(session.id)}
 										>
 											Delete
 										</Button>
@@ -185,7 +198,7 @@ const SessionPage = () => {
 				</li>
 			);
 		},
-		[activeSessionId, handleDelelteSessionById, handleSwitchSessionById],
+		[activeSessionId, handleDeleteSessionById, handleSwitchSessionById],
 	);
 
 	return (

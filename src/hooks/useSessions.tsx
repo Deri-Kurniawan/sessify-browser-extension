@@ -22,6 +22,10 @@ const sessionContext = createContext<{
 	) => Promise<MessageResponse<AppSession>>;
 	switchSessionById: (id: string) => Promise<MessageResponse>;
 	deleteSessionById: (id: string) => Promise<MessageResponse>;
+	updateSessionById: (
+		id: string,
+		data: Partial<Pick<AppSession, "title">>,
+	) => Promise<MessageResponse>;
 } | null>(null);
 
 const useSessions = () => {
@@ -162,6 +166,33 @@ const SessionProvider: FC<{
 		}
 	}, []);
 
+	const updateSessionById = useCallback(
+		async (id: string, data: Partial<Pick<AppSession, "title">>) => {
+			const res = await sendMessage({
+				action: "UPDATE_SESSION_BY_ID",
+				payload: {
+					sessionId: id,
+					...data,
+				},
+			});
+			if (res.success) {
+				setSessions((prev) =>
+					prev.map((s) => (s.id === id ? { ...s, ...data } : s)),
+				);
+				loadSessions();
+				return res;
+			} else {
+				setError(
+					res.message
+						? `Could not update session: ${res.message}`
+						: "Could not update session. Please try again.",
+				);
+				return res;
+			}
+		},
+		[loadSessions],
+	);
+
 	useEffect(() => {
 		loadSessions().catch((err) => {
 			setError(err.message);
@@ -215,6 +246,7 @@ const SessionProvider: FC<{
 				saveNewSession,
 				switchSessionById,
 				deleteSessionById,
+				updateSessionById,
 			}}
 		>
 			{children}

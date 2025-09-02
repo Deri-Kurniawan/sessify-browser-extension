@@ -229,6 +229,51 @@ class SessifyExtension {
 							};
 							break;
 						}
+						case "UPDATE_SESSION_BY_ID": {
+							const {
+								sessionId,
+								title = moment().format("MMM D, YYYY, h:mm:ss"),
+							} = message.payload ?? {};
+							if (!sessionId) {
+								response = {
+									success: false,
+									message: "No session ID provided",
+								};
+								break;
+							}
+
+							const existingSessions = await Storage.get<AppSession[]>(
+								CONFIGS.SESSION_STORAGE.KEYS.SESSIONS,
+							);
+							const sessionIndex = existingSessions?.findIndex(
+								(s) => s.id === sessionId,
+							);
+							if (!sessionIndex || sessionIndex === -1) {
+								response = {
+									success: false,
+									message: `Update failed. Session not found`,
+								};
+								break;
+							}
+
+							const updatedSession = {
+								...existingSessions![sessionIndex],
+								title,
+								updatedAt: Date.now(),
+							};
+							const updatedSessions = [...(existingSessions || [])];
+							updatedSessions[sessionIndex] = updatedSession;
+							await Storage.set(
+								CONFIGS.SESSION_STORAGE.KEYS.SESSIONS,
+								updatedSessions,
+							);
+							response = {
+								success: true,
+								message: "Session updated successfully",
+								data: updatedSession,
+							};
+							break;
+						}
 						case "DELETE_SESSION_BY_ID": {
 							const { sessionId } = message.payload ?? {};
 							if (!sessionId) {

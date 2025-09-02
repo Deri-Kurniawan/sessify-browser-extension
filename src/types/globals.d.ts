@@ -63,6 +63,7 @@ declare interface MessageResponse<T = unknown> {
 declare type EnumBackgroundAction =
 	| "GET_FILTERED_SESSIONS_BY_ACTIVE_TAB"
 	| "SAVE_CURRENT_TAB_STORAGE_TO_EXTENSION_STORAGE"
+	| "UPDATE_SESSION_BY_ID"
 	| "DELETE_SESSION_BY_ID"
 	| "CREATE_NEW_SESSION"
 	| "REFRESH_CURRENT_TAB"
