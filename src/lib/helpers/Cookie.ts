@@ -1,13 +1,17 @@
 import { handleError } from "../utils";
 
 /**
- * A helper class for managing cookies in a Chrome Extension.
- *
- * environment: Chrome Extensions
+ * A utility class for managing cookies in a Chrome Extension.
+ * All methods are static and handle errors by logging and throwing custom errors.
  */
-
 // biome-ignore lint/complexity/noStaticOnlyClass: utility class
 class Cookie {
+	/**
+	 * Retrieves all cookies matching the specified details.
+	 * @param data The details to filter cookies.
+	 * @returns A promise that resolves to an array of cookies.
+	 * @throws {CookieError} If the retrieval fails.
+	 */
 	static async getAll(
 		data: chrome.cookies.GetAllDetails,
 	): Promise<chrome.cookies.Cookie[]> {
@@ -20,6 +24,12 @@ class Cookie {
 		}
 	}
 
+	/**
+	 * Sets a single cookie with the specified details.
+	 * @param cookie The details of the cookie to set.
+	 * @returns A promise that resolves to the set cookie or null if failed.
+	 * @throws {CookieError} If the setting fails.
+	 */
 	static async set(
 		cookie: chrome.cookies.SetDetails,
 	): Promise<chrome.cookies.Cookie | null> {
@@ -32,21 +42,26 @@ class Cookie {
 		}
 	}
 
+	/**
+	 * Sets multiple cookies with fallback values for missing properties.
+	 * @param cookies An array of cookie objects to set.
+	 * @throws {CookieError} If any setting fails.
+	 */
 	static async setMany(cookies: chrome.cookies.Cookie[]): Promise<void> {
 		try {
-			const setPromises = cookies.map((cookie) =>
-				chrome.cookies.set({
-					url: origin,
-					name: cookie.name,
-					value: cookie.value,
-					domain: cookie.domain,
+			const setPromises = cookies.map((cookie) => {
+				const protocol = cookie.secure ? "https:" : "http:";
+				const url = `${protocol}//${cookie.domain}${cookie.path || "/"}`;
+				return chrome.cookies.set({
+					...cookie,
+					url,
 					path: cookie.path || "/",
 					secure: cookie.secure || false,
 					httpOnly: cookie.httpOnly || false,
 					sameSite: cookie.sameSite || "lax",
-					expirationDate: cookie.expirationDate,
-				}),
-			);
+				});
+			});
+
 			await Promise.allSettled(setPromises);
 		} catch (error) {
 			handleError("setManyCookies", error);
@@ -54,15 +69,30 @@ class Cookie {
 		}
 	}
 
+	/**
+	 * Removes a single cookie by URL and name.
+	 * @param url The URL associated with the cookie.
+	 * @param name The name of the cookie to remove.
+	 * @throws {CookieError} If the removal fails.
+	 */
 	static async remove(url: string, name: string): Promise<void> {
 		try {
 			await chrome.cookies.remove({ url, name });
 		} catch (error) {
 			handleError("removeCookie", error);
-			throw new CookieError("Failed to remove cookie", error);
+			throw new CookieError(
+				`Failed to remove cookie ${name} from ${url}`,
+				error,
+			);
 		}
 	}
 
+	/**
+	 * Removes multiple cookies by URL and cookie objects.
+	 * @param url The URL associated with the cookies.
+	 * @param cookies An array of cookie objects to remove.
+	 * @throws {CookieError} If any removal fails.
+	 */
 	static async removeMany(
 		url: string,
 		cookies: chrome.cookies.Cookie[],
@@ -74,21 +104,28 @@ class Cookie {
 			await Promise.allSettled(removePromises);
 		} catch (error) {
 			handleError("removeManyCookies", error);
-			throw new CookieError("Failed to remove many cookies", error);
+			throw new CookieError(`Failed to remove many cookies from ${url}`, error);
 		}
 	}
 }
 
+/**
+ * Custom error class for Cookie operations.
+ */
 class CookieError extends Error {
+	public cause?: unknown;
+
+	/**
+	 * @param message The error message.
+	 * @param originalError The original error that caused this error.
+	 */
 	constructor(
 		message: string,
 		public originalError?: unknown,
 	) {
 		super(message);
 		this.name = "CookieError";
-		if (originalError instanceof Error) {
-			this.stack = originalError.stack;
-		}
+		this.cause = originalError;
 	}
 }
 
