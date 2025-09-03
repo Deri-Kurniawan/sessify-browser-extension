@@ -276,17 +276,38 @@ class SessifyExtension {
 
 		const currentTabUrl = new URL(currentTab.url);
 		const currentFqdn = currentTabUrl.hostname;
+		const currentPort = currentTabUrl.port;
 		const sessionFqdn = targetSession.domain.fqdn;
+		const sessionPort = targetSession.domain.port
+			? targetSession.domain.port.toString()
+			: "";
 
 		let needsNavigation = false;
-		// handle navigation if session is in a different domain e..g., test.example.com vs www.example.com
-		if (currentFqdn !== sessionFqdn) {
+		// handle navigation if session is in a different domain or port e.g., test.example.com vs www.example.com or same host different port
+		console.log({ currentFqdn, sessionFqdn, currentPort, sessionPort });
+		if (
+			currentFqdn !== sessionFqdn ||
+			(currentFqdn === sessionFqdn && currentPort !== sessionPort)
+		) {
 			const currentDomain = tldtsParse(currentFqdn).domain?.toLowerCase();
 			const sessionDomain = targetSession.domain.domain.toLowerCase();
 
-			if (currentDomain === sessionDomain) {
+			let shouldNavigate = false;
+			if (currentDomain && sessionDomain && currentDomain === sessionDomain) {
+				shouldNavigate = true;
+			} else if (currentFqdn === "localhost" && sessionFqdn === "localhost") {
+				shouldNavigate = true;
+			} else if (
+				SessifyExtension.IP_ADDRESS_REGEX.test(currentFqdn) &&
+				SessifyExtension.IP_ADDRESS_REGEX.test(sessionFqdn) &&
+				currentFqdn === sessionFqdn
+			) {
+				shouldNavigate = true;
+			}
+
+			if (shouldNavigate) {
 				needsNavigation = true;
-				const targetUrl = `${currentTabUrl.protocol}//${sessionFqdn}`;
+				const targetUrl = `${currentTabUrl.protocol}//${sessionFqdn}${sessionPort ? `:${sessionPort}` : ""}`;
 				await chrome.tabs.update(currentTab.id, { url: targetUrl });
 				await new Promise((resolve) => setTimeout(resolve, 1000));
 				const updatedTab = await BrowserTabs.getCurrentActive();
@@ -309,7 +330,7 @@ class SessifyExtension {
 		this._updateBadgeForActiveTab();
 
 		const navigationMessage = needsNavigation
-			? ` and navigated to ${sessionFqdn}`
+			? ` and navigated to ${sessionFqdn}${sessionPort ? `:${sessionPort}` : ""}`
 			: "";
 
 		return {
@@ -504,6 +525,7 @@ class SessifyExtension {
 				fqdn: parsedDomain.hostname || tabUrl.hostname,
 				isIp: parsedDomain.isIp || false,
 				isIcann: parsedDomain.isIcann || false,
+				port: tabUrl.port ? parseInt(tabUrl.port, 10) : null,
 			},
 			createdAt: Date.now(),
 			updatedAt: Date.now(),
@@ -541,8 +563,13 @@ class SessifyExtension {
 	): AppSession[] {
 		return sessions
 			.map((session) => {
-				// Only update appIconUrl if exact FQDN match
-				if (activeTabUrl.hostname === session.domain.fqdn) {
+				// Only update appIconUrl if exact FQDN match including port
+				if (
+					activeTabUrl.hostname === session.domain.fqdn &&
+					(session.domain.port === null
+						? activeTabUrl.port === ""
+						: session.domain.port === parseInt(activeTabUrl.port, 10))
+				) {
 					return {
 						...session,
 						appIconUrl: activeTab?.favIconUrl || session.appIconUrl,
@@ -600,8 +627,8 @@ class SessifyExtension {
 						: matchingSessions.length.toString();
 
 				chrome.action.setBadgeText({ text: badgeText });
-			} catch (error) {
-				handleError("_updateBadgeForActiveTab", error);
+			} catch {
+				// handleError("_updateBadgeForActiveTab", error);
 				chrome.action.setBadgeText({ text: "" });
 			}
 		})();

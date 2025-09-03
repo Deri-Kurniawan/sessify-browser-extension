@@ -127,11 +127,18 @@ const SessionPage = () => {
 						alt={session.title}
 					/>
 					<div className="flex flex-col flex-1 w-full">
-						<span className="text-base font-medium text-gray-900 line-clamp-1">
+						<span
+							className="text-base font-medium text-gray-900 line-clamp-1"
+							title={session.title}
+						>
 							{session.title}
 						</span>
-						<span className="text-sm text-gray-500 line-clamp-1">
+						<span
+							className="text-sm text-gray-500 line-clamp-1"
+							title={`${session.domain.fqdn}${session.domain.port ? `:${session.domain.port}` : ""}`}
+						>
 							{session.domain.fqdn}
+							{session.domain.port && `:${session.domain.port}`}
 						</span>
 					</div>
 					{/** biome-ignore lint/a11y/noStaticElementInteractions: we need to use stopPropagation */}

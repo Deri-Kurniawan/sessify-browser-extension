@@ -44,6 +44,11 @@ declare interface AppSession {
 		 * Whether the suffix is a valid ICANN-managed TLD
 		 */
 		isIcann: boolean;
+
+		/**
+		 * Port number if specified in the URL, otherwise null
+		 */
+		port: number | null;
 	};
 	createdAt: number;
 	updatedAt: number;
