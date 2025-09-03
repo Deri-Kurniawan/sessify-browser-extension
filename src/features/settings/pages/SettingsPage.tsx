@@ -1,13 +1,13 @@
 import { Settings2Icon } from "lucide-react";
-import pkg from "../../../package.json";
-import ContentWrapper from "../ContentWrapper";
+import pkg from "@/../package.json";
+import ContentWrapper from "@/components/ContentWrapper";
 import Placeholder, {
 	PlaceholderDescription,
 	PlaceholderIcon,
 	PlaceholderTitle,
-} from "../Placeholder";
-import TopBar from "../TopBar";
-import { Button } from "../ui/button";
+} from "@/components/Placeholder";
+import TopBar from "@/components/TopBar";
+import { Button } from "@/components/ui/button";
 
 const SettingsPage = () => {
 	return (

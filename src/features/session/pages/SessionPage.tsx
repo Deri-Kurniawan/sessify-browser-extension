@@ -7,6 +7,12 @@ import {
 } from "lucide-react";
 import { useCallback } from "react";
 import { toast } from "sonner";
+import ContentWrapper from "@/components/ContentWrapper";
+import Placeholder, {
+	PlaceholderDescription,
+	PlaceholderIcon,
+	PlaceholderTitle,
+} from "@/components/Placeholder";
 import TopBar from "@/components/TopBar";
 import { Button } from "@/components/ui/button";
 import {
@@ -19,16 +25,14 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from "@/components/ui/dialog";
-import { useSessions } from "@/hooks/useSessions";
+import {
+	Tooltip,
+	TooltipContent,
+	TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { useSessions } from "@/features/session/hooks/useSessions";
 import { cn } from "@/lib/utils";
-import ContentWrapper from "../ContentWrapper";
-import Placeholder, {
-	PlaceholderDescription,
-	PlaceholderIcon,
-	PlaceholderTitle,
-} from "../Placeholder";
-import EditSessionDialog from "../SessionDetailDialog";
-import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
+import EditSessionDialog from "../components/SessionDetailDialog";
 
 const SessionPage = () => {
 	const {

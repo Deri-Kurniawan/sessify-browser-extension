@@ -1,9 +1,9 @@
 import type { ComponentProps, FC } from "react";
 import { createHashRouter, RouterProvider } from "react-router";
 import RootLayout from "@/components/layouts/RootLayout";
-import SessionPage from "@/components/pages/SessionPage";
-import SettingsPage from "@/components/pages/SettingsPage";
-import { SessionProvider } from "@/hooks/useSessions";
+import { SessionProvider } from "@/features/session/hooks/useSessions";
+import SessionPage from "@/features/session/pages/SessionPage";
+import SettingsPage from "@/features/settings/pages/SettingsPage";
 
 interface AppProps {
 	launchType?: ComponentProps<typeof RootLayout>["launchType"];
