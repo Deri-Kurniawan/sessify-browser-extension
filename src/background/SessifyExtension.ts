@@ -266,6 +266,39 @@ class SessifyExtension {
 			};
 		}
 
+		const currentTab = await BrowserTabs.getCurrentActive();
+		if (!currentTab?.id || !currentTab.url) {
+			return {
+				success: false,
+				message: SessifyExtension.ERROR_MESSAGES.NO_ACTIVE_TAB,
+			};
+		}
+
+		const currentTabUrl = new URL(currentTab.url);
+		const currentFqdn = currentTabUrl.hostname;
+		const sessionFqdn = targetSession.domain.fqdn;
+
+		let needsNavigation = false;
+		// handle navigation if session is in a different domain e..g., test.example.com vs www.example.com
+		if (currentFqdn !== sessionFqdn) {
+			const currentDomain = tldtsParse(currentFqdn).domain?.toLowerCase();
+			const sessionDomain = targetSession.domain.domain.toLowerCase();
+
+			if (currentDomain === sessionDomain) {
+				needsNavigation = true;
+				const targetUrl = `${currentTabUrl.protocol}//${sessionFqdn}`;
+				await chrome.tabs.update(currentTab.id, { url: targetUrl });
+				await new Promise((resolve) => setTimeout(resolve, 1000));
+				const updatedTab = await BrowserTabs.getCurrentActive();
+				if (!updatedTab?.id) {
+					return {
+						success: false,
+						message: SessifyExtension.ERROR_MESSAGES.NO_ACTIVE_TAB,
+					};
+				}
+			}
+		}
+
 		await SiteStorage.clearStorageForCurrentTab();
 		await SiteStorage.applyStorageToCurrentTab(targetSession.state);
 		await Storage.set(
@@ -275,9 +308,13 @@ class SessifyExtension {
 
 		this._updateBadgeForActiveTab();
 
+		const navigationMessage = needsNavigation
+			? ` and navigated to ${sessionFqdn}`
+			: "";
+
 		return {
 			success: true,
-			message: "Session switched successfully",
+			message: `Session switched successfully${navigationMessage}`,
 			data: sessionId,
 		};
 	}
