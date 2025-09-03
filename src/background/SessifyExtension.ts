@@ -150,27 +150,39 @@ class SessifyExtension {
 	private async _handleGetFilteredSessions(): Promise<
 		MessageResponse<AppSession[]>
 	> {
-		const activeTabUrl = await this._validateAndGetActiveTabUrl();
-		const allSessions = await this._getAllSessions();
-		const matchingSessions = this._filterSessionsForUrl(
-			activeTabUrl,
-			allSessions,
-		);
-		const activeTab = await BrowserTabs.getCurrentActive();
+		try {
+			const activeTabUrl = await this._validateAndGetActiveTabUrl();
+			const allSessions = await this._getAllSessions();
+			const matchingSessions = this._filterSessionsForUrl(
+				activeTabUrl,
+				allSessions,
+			);
+			const activeTab = await BrowserTabs.getCurrentActive();
 
-		const sortedSessions = this._sortSessionsByRelevance(
-			matchingSessions,
-			activeTabUrl,
-			activeTab,
-		);
+			const sortedSessions = this._sortSessionsByRelevance(
+				matchingSessions,
+				activeTabUrl,
+				activeTab,
+			);
 
-		this._updateBadgeForActiveTab();
+			this._updateBadgeForActiveTab();
 
-		return {
-			success: true,
-			message: "Sessions retrieved successfully",
-			data: sortedSessions,
-		};
+			return {
+				success: true,
+				message: "Sessions retrieved successfully",
+				data: sortedSessions,
+			};
+		} catch (error) {
+			if (error instanceof SessifyExtensionError) {
+				this._updateBadgeForActiveTab();
+				return {
+					success: true,
+					message: "No sessions available for this page type",
+					data: [],
+				};
+			}
+			throw error;
+		}
 	}
 
 	/**
