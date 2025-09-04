@@ -7,7 +7,8 @@
   "private": true,
   "author": {
     "name": "Deri Kurniawan",
-    "email": "hi@derikn.com"
+    "email": "hi@derikn.com",
+    "url": "https://www.derikn.com"
   },
   "homepage": "https://sessify.derikn.com",
   "repository": {
