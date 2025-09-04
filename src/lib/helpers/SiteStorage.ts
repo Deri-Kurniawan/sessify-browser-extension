@@ -1,3 +1,5 @@
+/// <reference types="chrome"/>
+
 import { handleError } from "../utils";
 import { BrowserTabs } from "./BrowserTabs";
 import { Cookie } from "./Cookie";
