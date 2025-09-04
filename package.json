@@ -16,6 +16,7 @@
     "url": "https://github.com/Deri-Kurniawan/sessify-browser-extension.git"
   },
   "license": "MIT",
+  "workspaces": ["www"],
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",

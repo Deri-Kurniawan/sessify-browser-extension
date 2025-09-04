@@ -347,7 +347,7 @@ class SessifyExtension {
 		sessionId?: string;
 		title?: string;
 	}): Promise<MessageResponse<AppSession>> {
-		const { sessionId, title = moment().format("MMM D, YYYY, h:mm:ss") } =
+		const { sessionId, title = moment().format("MMM D, YYYY, hh:mm:ss") } =
 			payload ?? {};
 
 		if (!sessionId) {
@@ -516,7 +516,7 @@ class SessifyExtension {
 		return {
 			id: crypto.randomUUID(),
 			appIconUrl: currentTab.favIconUrl || "/public/icon32.png",
-			title: title || moment().format("MMM D, YYYY, h:mm:ss"),
+			title: title || moment().format("MMM D, YYYY, HH:mm:ss"),
 			domain: {
 				domain: parsedDomain.domain || "",
 				subdomain: parsedDomain.subdomain || "",
