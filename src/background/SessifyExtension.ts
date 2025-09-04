@@ -357,11 +357,10 @@ class SessifyExtension {
 		}
 
 		const existingSessions = await this._getAllSessions();
-		const sessionIndex = existingSessions?.findIndex(
-			(session) => session.id === sessionId,
-		);
+		const sessionIndex =
+			existingSessions?.findIndex((session) => session.id === sessionId) ?? -1;
 
-		if (!sessionIndex || sessionIndex === -1) {
+		if (sessionIndex === -1) {
 			return {
 				success: false,
 				message: SessifyExtension.ERROR_MESSAGES.UPDATE_FAILED,
