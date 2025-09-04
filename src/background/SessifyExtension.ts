@@ -284,7 +284,6 @@ class SessifyExtension {
 
 		let needsNavigation = false;
 		// handle navigation if session is in a different domain or port e.g., test.example.com vs www.example.com or same host different port
-		console.log({ currentFqdn, sessionFqdn, currentPort, sessionPort });
 		if (
 			currentFqdn !== sessionFqdn ||
 			(currentFqdn === sessionFqdn && currentPort !== sessionPort)

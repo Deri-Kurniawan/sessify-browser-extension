@@ -36,6 +36,7 @@ export default defineManifest({
 		"tabs",
 		"activeTab",
 		"scripting",
+		"unlimitedStorage",
 	],
 	host_permissions: ["https://*/*", "http://*/*"],
 	content_scripts: [
