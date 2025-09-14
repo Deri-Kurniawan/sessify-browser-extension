@@ -12,7 +12,7 @@ export function FooterSection({ className = "" }: FooterSectionProps) {
 	return (
 		<footer className={cn("px-4 py-6", className)}>
 			<div className="flex flex-col items-center justify-between gap-4 md:flex-row">
-				<div className="flex items-center gap-2 text-sm">
+				<div className="flex flex-wrap items-center gap-2 text-sm truncate">
 					<span>Made with</span>
 					<HeartIcon className="text-red-500 fill-current size-4 animate-pulse" />
 					<span>by</span>

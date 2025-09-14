@@ -39,8 +39,10 @@ export default async function HomePage({ searchParams }: HomePageProps) {
 	const userBrowserType = params?.browser;
 	return (
 		<div className="container w-full px-4 mx-auto">
-			<HeroSection userBrowserType={userBrowserType} />
-			<FooterSection className="mt-16" />
+			<div className="mt-20">
+				<HeroSection userBrowserType={userBrowserType} />
+			</div>
+			<FooterSection className="mt-6" />
 		</div>
 	);
 }
