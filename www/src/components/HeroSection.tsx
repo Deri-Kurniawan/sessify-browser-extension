@@ -1,7 +1,13 @@
-import { CodeIcon, ShieldIcon, StarIcon, ZapIcon } from "lucide-react";
+import {
+	CodeIcon,
+	GlobeIcon,
+	ShieldIcon,
+	StarIcon,
+	ZapIcon,
+} from "lucide-react";
 import Image from "next/image";
 import { FaChrome, FaEdge, FaOpera } from "react-icons/fa";
-import { SiBrave, SiVivaldi } from "react-icons/si"; // not in react-icons/fa
+import { SiBrave, SiVivaldi } from "react-icons/si";
 import extensionSidepanelSnapshot from "@/assets/images/extension-sidepanel-snapshot.png";
 import { env } from "@/env";
 import { Badge } from "./ui/badge";
@@ -40,9 +46,9 @@ const HeroSection = ({
 }: {
 	userBrowserType?: string;
 }) => {
-	const selectedBrowser =
-		browserSupport.find((b) => b.name === userBrowserType) ??
-		(userBrowserType === "unknown" ? browserSupport[0] : null);
+	const supportedBrowser = browserSupport.find(
+		(b) => b.name === userBrowserType,
+	);
 
 	return (
 		<section className="relative overflow-hidden">
@@ -83,20 +89,31 @@ const HeroSection = ({
 
 					{/* CTA Buttons */}
 					<div className="flex flex-wrap justify-center gap-4">
-						<Button
-							size="lg"
-							className="bg-primary hover:bg-primary/90 text-primary-foreground"
-							asChild
-						>
-							<a
-								href={selectedBrowser?.storeUrl}
-								target="_blank"
-								rel="noopener noreferrer"
+						{supportedBrowser ? (
+							<Button
+								size="lg"
+								className="bg-primary hover:bg-primary/90 text-primary-foreground"
+								asChild
 							>
-								{selectedBrowser?.icon}
-								Add to {selectedBrowser?.name}
-							</a>
-						</Button>
+								<a
+									href={supportedBrowser?.storeUrl}
+									target="_blank"
+									rel="noopener noreferrer"
+								>
+									{supportedBrowser?.icon}
+									Add to {supportedBrowser?.name}
+								</a>
+							</Button>
+						) : (
+							<Button
+								size="lg"
+								className="bg-primary hover:bg-primary/90 text-primary-foreground"
+								disabled
+							>
+								<GlobeIcon className="size-5" />
+								Browser not supported
+							</Button>
+						)}
 
 						<Button variant="outline" size="lg" asChild>
 							<a
