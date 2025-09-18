@@ -41,9 +41,9 @@ export function FooterSection({ className = "" }: FooterSectionProps) {
 						href={`${env.NEXT_PUBLIC_GITHUB_URL}/blob/main/LICENSE`}
 						target="_blank"
 						rel="noopener noreferrer"
-						className="text-sm"
+						className="flex items-center gap-2 text-sm"
 					>
-						<FileTextIcon className="inline mr-1 size-4" />
+						<FileTextIcon className="size-4" />
 						<span>{pkg.license} License</span>
 					</a>
 				</div>

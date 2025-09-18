@@ -57,7 +57,7 @@ const HeroSection = ({
 				<div className="flex flex-col items-center justify-center space-y-8">
 					<div className="flex flex-col items-center justify-center space-y-4 text-center">
 						<Badge variant="secondary" className="w-fit">
-							<ShieldIcon className="w-3 h-3 mr-1" />
+							<ShieldIcon className="size-3" />
 							Privacy First
 						</Badge>
 
@@ -74,15 +74,15 @@ const HeroSection = ({
 					{/* Feature highlights */}
 					<div className="flex flex-wrap justify-center gap-4">
 						<div className="flex items-center gap-2 text-sm text-muted-foreground">
-							<ZapIcon className="w-4 h-4 text-primary" />
+							<ZapIcon className="size-4 text-primary" />
 							Free Forever
 						</div>
 						<div className="flex items-center gap-2 text-sm text-muted-foreground">
-							<ShieldIcon className="w-4 h-4 text-primary" />
+							<ShieldIcon className="size-4 text-primary" />
 							Privacy in your hands
 						</div>
 						<div className="flex items-center gap-2 text-sm text-muted-foreground">
-							<CodeIcon className="w-4 h-4 text-primary" />
+							<CodeIcon className="size-4 text-primary" />
 							Open Source
 						</div>
 					</div>
@@ -121,7 +121,7 @@ const HeroSection = ({
 								target="_blank"
 								rel="noopener noreferrer"
 							>
-								<StarIcon className="mr-2 size-5" />
+								<StarIcon className="size-5" />
 								Star on GitHub
 							</a>
 						</Button>
