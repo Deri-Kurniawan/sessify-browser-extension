@@ -29,7 +29,7 @@ export function FooterSection({ className = "" }: FooterSectionProps) {
 
 				<div className="flex items-center gap-6">
 					<a
-						href={env.PUBLIC_GITHUB_URL}
+						href={env.NEXT_PUBLIC_GITHUB_URL}
 						target="_blank"
 						rel="noopener noreferrer"
 						className="flex items-center gap-2 text-sm"
@@ -38,7 +38,7 @@ export function FooterSection({ className = "" }: FooterSectionProps) {
 						<span>GitHub</span>
 					</a>
 					<a
-						href={`${env.PUBLIC_GITHUB_URL}/blob/main/LICENSE`}
+						href={`${env.NEXT_PUBLIC_GITHUB_URL}/blob/main/LICENSE`}
 						target="_blank"
 						rel="noopener noreferrer"
 						className="text-sm"

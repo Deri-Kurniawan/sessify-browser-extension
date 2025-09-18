@@ -13,11 +13,11 @@ export const metadata: Metadata = {
 	openGraph: {
 		title,
 		description,
-		url: env.PUBLIC_APP_URL,
+		url: env.NEXT_PUBLIC_APP_URL,
 		siteName: "Sessify",
 		images: [
 			{
-				url: `${env.PUBLIC_APP_URL}/og-image.png`,
+				url: `${env.NEXT_PUBLIC_APP_URL}/og-image.png`,
 				alt: "Sessify - Browser Extension for Session Management",
 				width: 1200,
 				height: 630,

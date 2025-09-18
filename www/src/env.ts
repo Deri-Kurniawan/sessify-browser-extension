@@ -11,11 +11,11 @@ export const env = createEnv({
 	 * The prefix that client-side variables must have. This is enforced both at
 	 * a type-level and at runtime.
 	 */
-	clientPrefix: "PUBLIC_",
+	clientPrefix: "NEXT_PUBLIC",
 
 	client: {
-		PUBLIC_APP_URL: z.url().min(1).default("http://localhost:3000"),
-		PUBLIC_GITHUB_URL: z
+		NEXT_PUBLIC_APP_URL: z.url().min(1).default("http://localhost:3000"),
+		NEXT_PUBLIC_GITHUB_URL: z
 			.url()
 			.min(1)
 			.default(pkg.repository.url.replace(/\.git$/, "")),

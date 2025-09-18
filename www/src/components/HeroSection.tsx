@@ -117,7 +117,7 @@ const HeroSection = ({
 
 						<Button variant="outline" size="lg" asChild>
 							<a
-								href={env.PUBLIC_GITHUB_URL}
+								href={env.NEXT_PUBLIC_GITHUB_URL}
 								target="_blank"
 								rel="noopener noreferrer"
 							>
