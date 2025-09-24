@@ -1,6 +1,6 @@
 /// <reference types="chrome"/>
 
-import { handleError } from "../utils";
+import { traceError } from "../utils";
 
 /**
  * A utility class for managing cookies in a Chrome Extension.
@@ -21,7 +21,7 @@ class Cookie {
 			const cookies = await chrome.cookies.getAll({ ...data });
 			return cookies;
 		} catch (error) {
-			handleError("getAllCookies", error);
+			traceError("getAllCookies", error);
 			throw new CookieError("Failed to get cookies", error);
 		}
 	}
@@ -39,7 +39,7 @@ class Cookie {
 			const setCookie = await chrome.cookies.set(cookie);
 			return setCookie || null;
 		} catch (error) {
-			handleError("setCookie", error);
+			traceError("setCookie", error);
 			throw new CookieError("Failed to set cookie", error);
 		}
 	}
@@ -66,7 +66,7 @@ class Cookie {
 
 			await Promise.allSettled(setPromises);
 		} catch (error) {
-			handleError("setManyCookies", error);
+			traceError("setManyCookies", error);
 			throw new CookieError("Failed to set many cookies", error);
 		}
 	}
@@ -81,7 +81,7 @@ class Cookie {
 		try {
 			await chrome.cookies.remove({ url, name });
 		} catch (error) {
-			handleError("removeCookie", error);
+			traceError("removeCookie", error);
 			throw new CookieError(
 				`Failed to remove cookie ${name} from ${url}`,
 				error,
@@ -105,7 +105,7 @@ class Cookie {
 			);
 			await Promise.allSettled(removePromises);
 		} catch (error) {
-			handleError("removeManyCookies", error);
+			traceError("removeManyCookies", error);
 			throw new CookieError(`Failed to remove many cookies from ${url}`, error);
 		}
 	}

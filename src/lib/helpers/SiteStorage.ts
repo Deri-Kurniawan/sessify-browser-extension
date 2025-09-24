@@ -1,6 +1,6 @@
 /// <reference types="chrome"/>
 
-import { handleError } from "../utils";
+import { traceError } from "../utils";
 import { BrowserTabs } from "./BrowserTabs";
 import { Cookie } from "./Cookie";
 
@@ -42,7 +42,7 @@ class SiteStorage {
 				cookies,
 			};
 		} catch (error) {
-			handleError("getSiteStorageData", error);
+			traceError("getSiteStorageData", error);
 			throw new SiteStorageError("Failed to retrieve site storage data", error);
 		}
 	}
@@ -67,7 +67,7 @@ class SiteStorage {
 			const cookies = await Cookie.getAll({ url: tab.url });
 			await Cookie.removeMany(tab.url, cookies);
 		} catch (error) {
-			handleError("clearSiteStorageData", error);
+			traceError("clearSiteStorageData", error);
 			throw new SiteStorageError("Failed to clear site storage data", error);
 		}
 	}
@@ -119,7 +119,7 @@ class SiteStorage {
 				},
 			});
 		} catch (error) {
-			handleError("applySiteStorageData", error);
+			traceError("applySiteStorageData", error);
 			throw new SiteStorageError("Failed to apply site storage data", error);
 		}
 	}

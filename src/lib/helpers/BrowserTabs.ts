@@ -1,6 +1,6 @@
 /// <reference types="chrome"/>
 
-import { handleError } from "../utils";
+import { traceError } from "../utils";
 
 /**
  * A utility class for managing browser tabs using the Chrome Extensions API.
@@ -21,7 +21,7 @@ class BrowserTabs {
 			});
 			return tabs.length > 0 ? tabs[0] : null;
 		} catch (error) {
-			handleError("getCurrentActiveTab", error);
+			traceError("getCurrentActiveTab", error);
 			throw new BrowserTabsError("Failed to get current active tab", error);
 		}
 	}
@@ -35,7 +35,7 @@ class BrowserTabs {
 		try {
 			await chrome.tabs.reload(tabId);
 		} catch (error) {
-			handleError("reloadTab", error);
+			traceError("reloadTab", error);
 			throw new BrowserTabsError(`Failed to reload tab ${tabId}`, error);
 		}
 	}
@@ -49,7 +49,7 @@ class BrowserTabs {
 		try {
 			await chrome.tabs.remove(tabId);
 		} catch (error) {
-			handleError("closeTab", error);
+			traceError("closeTab", error);
 			throw new BrowserTabsError(`Failed to close tab ${tabId}`, error);
 		}
 	}
@@ -65,7 +65,7 @@ class BrowserTabs {
 			const tab = await chrome.tabs.create({ url });
 			return tab;
 		} catch (error) {
-			handleError("createTab", error);
+			traceError("createTab", error);
 			throw new BrowserTabsError(`Failed to create tab with URL ${url}`, error);
 		}
 	}

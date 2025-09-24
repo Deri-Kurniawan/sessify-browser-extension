@@ -5,7 +5,7 @@ import moment from "moment";
 import { parse as tldtsParse } from "tldts";
 import { CONFIGS } from "@/config";
 import { BrowserTabs, SiteStorage, Storage } from "../lib/helpers";
-import { handleError } from "../lib/utils";
+import { traceError } from "../lib/utils";
 
 /**
  * Main class for managing the Sessify Chrome extension background operations.
@@ -88,7 +88,7 @@ class SessifyExtension {
 		} catch (error) {
 			const processedError =
 				error instanceof Error ? error : new Error(String(error));
-			handleError("handleMessageAsync", processedError);
+			traceError("handleMessageAsync", processedError);
 			apiResponse = { success: false, message: processedError.message };
 		}
 
@@ -493,7 +493,7 @@ class SessifyExtension {
 		try {
 			return await SiteStorage.getStorageFromCurrentTab();
 		} catch (error) {
-			handleError("getSiteStorageFromCurrentTab", error);
+			traceError("getSiteStorageFromCurrentTab", error);
 			return null;
 		}
 	}
@@ -626,7 +626,7 @@ class SessifyExtension {
 
 				chrome.action.setBadgeText({ text: badgeText });
 			} catch {
-				// handleError("_updateBadgeForActiveTab", error);
+				// traceError("_updateBadgeForActiveTab", error);
 				chrome.action.setBadgeText({ text: "" });
 			}
 		})();

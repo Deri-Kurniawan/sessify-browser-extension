@@ -26,7 +26,7 @@ export async function sendToBackground<T>(message: {
 	});
 }
 
-export const handleError = (operation: string, error: unknown): void => {
+export const traceError = (operation: string, error: unknown): void => {
 	const errorMessage =
 		error instanceof Error
 			? error.message

@@ -1,6 +1,6 @@
 /// <reference types="chrome"/>
 
-import { handleError } from "../utils";
+import { traceError } from "../utils";
 
 /**
  * A utility class for managing local storage in a Chrome Extension.
@@ -19,7 +19,7 @@ class Storage {
 			const result = await chrome.storage.local.get(key);
 			return (result[key] as T) ?? null;
 		} catch (error) {
-			handleError("getStorage", error);
+			traceError("getStorage", error);
 			throw new StorageError(`Failed to get key "${key}" from storage`, error);
 		}
 	}
@@ -34,7 +34,7 @@ class Storage {
 		try {
 			await chrome.storage.local.set({ [key]: value });
 		} catch (error) {
-			handleError("setStorage", error);
+			traceError("setStorage", error);
 			throw new StorageError(`Failed to set key "${key}" in storage`, error);
 		}
 	}
@@ -48,7 +48,7 @@ class Storage {
 		try {
 			await chrome.storage.local.remove(key);
 		} catch (error) {
-			handleError("removeStorage", error);
+			traceError("removeStorage", error);
 			throw new StorageError(
 				`Failed to remove key "${key}" from storage`,
 				error,
@@ -64,7 +64,7 @@ class Storage {
 		try {
 			await chrome.storage.local.clear();
 		} catch (error) {
-			handleError("clearStorage", error);
+			traceError("clearStorage", error);
 			throw new StorageError("Failed to clear storage", error);
 		}
 	}
