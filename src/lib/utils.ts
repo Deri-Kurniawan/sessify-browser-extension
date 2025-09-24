@@ -5,7 +5,7 @@ export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs));
 }
 
-export async function sendMessage<T>(message: {
+export async function sendToBackground<T>(message: {
 	action: EnumBackgroundAction;
 	payload?: any;
 }): Promise<MessageResponse<T>> {

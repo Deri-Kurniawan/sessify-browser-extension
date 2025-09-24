@@ -7,7 +7,7 @@ import {
 	useEffect,
 	useState,
 } from "react";
-import { sendMessage } from "@/lib/utils";
+import { sendToBackground } from "@/lib/utils";
 
 const sessionContext = createContext<{
 	sessions: AppSession[];
@@ -45,7 +45,7 @@ const SessionProvider: FC<{
 	const [error, setError] = useState<string | null>(null);
 
 	const loadSessions = useCallback(async () => {
-		const res = await sendMessage<AppSession[]>({
+		const res = await sendToBackground<AppSession[]>({
 			action: "GET_FILTERED_SESSIONS_BY_ACTIVE_TAB",
 		});
 		if (res.success && res.data) {
@@ -62,7 +62,7 @@ const SessionProvider: FC<{
 	}, []);
 
 	const loadActiveSession = useCallback(async () => {
-		const res = await sendMessage<string>({
+		const res = await sendToBackground<string>({
 			action: "GET_ACTIVE_SESSION",
 		});
 
@@ -80,7 +80,7 @@ const SessionProvider: FC<{
 	}, []);
 
 	const createNewSession = useCallback(async () => {
-		const res = await sendMessage({ action: "CREATE_NEW_SESSION" });
+		const res = await sendToBackground({ action: "CREATE_NEW_SESSION" });
 		if (res.success) {
 			setActiveSessionId("");
 			return res;
@@ -95,7 +95,7 @@ const SessionProvider: FC<{
 	}, []);
 
 	const refreshCurrentTab = useCallback(async () => {
-		const res = await sendMessage({ action: "REFRESH_CURRENT_TAB" });
+		const res = await sendToBackground({ action: "REFRESH_CURRENT_TAB" });
 		if (res.success) {
 			return res;
 		}
@@ -109,7 +109,7 @@ const SessionProvider: FC<{
 
 	const saveNewSession = useCallback(
 		async (data?: Partial<Pick<AppSession, "title">>) => {
-			const res = await sendMessage<AppSession>({
+			const res = await sendToBackground<AppSession>({
 				action: "SAVE_CURRENT_TAB_STORAGE_TO_EXTENSION_STORAGE",
 				payload: data,
 			});
@@ -130,7 +130,7 @@ const SessionProvider: FC<{
 	);
 
 	const switchSessionById = useCallback(async (id: string) => {
-		const res = await sendMessage({
+		const res = await sendToBackground({
 			action: "SWITCH_SESSION_BY_ID",
 			payload: { sessionId: id },
 		});
@@ -147,7 +147,7 @@ const SessionProvider: FC<{
 	}, []);
 
 	const deleteSessionById = useCallback(async (id: string) => {
-		const res = await sendMessage({
+		const res = await sendToBackground({
 			action: "DELETE_SESSION_BY_ID",
 			payload: {
 				sessionId: id,
@@ -168,7 +168,7 @@ const SessionProvider: FC<{
 
 	const updateSessionById = useCallback(
 		async (id: string, data: Partial<Pick<AppSession, "title">>) => {
-			const res = await sendMessage({
+			const res = await sendToBackground({
 				action: "UPDATE_SESSION_BY_ID",
 				payload: {
 					sessionId: id,
