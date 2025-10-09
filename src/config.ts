@@ -1,19 +1,20 @@
 export const CONFIGS = {
-	SESSION_STORAGE: {
-		KEYS: {
-			SESSIONS: "sessions",
-			ACTIVE_SESSION_ID: "activeSessionId",
-		},
+	KEYS: {
+		EXTENSION_ID: "sessify_extension_id_v1",
+		SESSIONS: "sessify_sessions_v1",
+		ACTIVE_SESSION_ID: "sessify_active_session_id_v1",
+		SETTINGS: "sessify_settings_v1",
 	},
-	BADGE: {
-		COLORS: {
-			BACKGROUND: {
-				ACTIVE: "#000000",
-			},
-			TEXT: {
-				DEFAULT: "#FFFFFF",
-			},
+	SETTINGS: {
+		DEFAULT: {
+			theme: "light",
+			confirmBeforeDelete: true,
+			confirmBeforeSwitch: false,
+			confirmBeforeNewSession: false,
+			showBadge: true,
+			badgeColor: "#000000",
+			badgeTextColor: "#FFFFFF",
+			badgeMaxCount: 99,
 		},
-		MAX_COUNT: 99,
 	},
 };

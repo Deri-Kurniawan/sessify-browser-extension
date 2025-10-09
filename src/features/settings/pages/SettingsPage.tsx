@@ -7,7 +7,7 @@ import Placeholder, {
 	PlaceholderTitle,
 } from "@/components/Placeholder";
 import TopBar from "@/components/TopBar";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/Button";
 
 const SettingsPage = () => {
 	return (

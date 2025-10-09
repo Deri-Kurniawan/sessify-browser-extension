@@ -7,9 +7,10 @@ import {
 	useEffect,
 	useState,
 } from "react";
+import { browser } from "#imports";
 import { sendToBackground } from "@/lib/utils";
 
-const sessionContext = createContext<{
+export const SessionContext = createContext<{
 	sessions: AppSession[];
 	activeSessionId: string;
 	error: string | null;
@@ -29,9 +30,9 @@ const sessionContext = createContext<{
 } | null>(null);
 
 const useSessions = () => {
-	const context = useContext(sessionContext);
+	const context = useContext(SessionContext);
 	if (!context) {
-		throw new Error("useSessions must be used within a SessionProvider");
+		throw new Error("useSessions must be used within a <SessionProvider />");
 	}
 	return context;
 };
@@ -135,6 +136,7 @@ const SessionProvider: FC<{
 			payload: { sessionId: id },
 		});
 		if (res.success) {
+			setActiveSessionId(id);
 			return res;
 		} else {
 			setError(
@@ -208,11 +210,11 @@ const SessionProvider: FC<{
 			loadSessions();
 			loadActiveSession();
 		};
-		window.chrome.tabs.onActivated.addListener(handleTabChange);
-		window.chrome.tabs.onUpdated.addListener(handleTabChange);
+		browser.tabs.onActivated.addListener(handleTabChange);
+		browser.tabs.onUpdated.addListener(handleTabChange);
 		return () => {
-			window.chrome.tabs.onActivated.removeListener(handleTabChange);
-			window.chrome.tabs.onUpdated.removeListener(handleTabChange);
+			browser.tabs.onActivated.removeListener(handleTabChange);
+			browser.tabs.onUpdated.removeListener(handleTabChange);
 		};
 	}, [loadSessions, loadActiveSession, watchTabChange]);
 
@@ -226,15 +228,15 @@ const SessionProvider: FC<{
 			}
 		};
 
-		window.chrome.storage.onChanged.addListener(storageListener);
+		browser.storage.onChanged.addListener(storageListener);
 
 		return () => {
-			window.chrome.storage.onChanged.removeListener(storageListener);
+			browser.storage.onChanged.removeListener(storageListener);
 		};
 	}, [loadSessions, loadActiveSession]);
 
 	return (
-		<sessionContext.Provider
+		<SessionContext.Provider
 			value={{
 				sessions,
 				activeSessionId,
@@ -250,7 +252,7 @@ const SessionProvider: FC<{
 			}}
 		>
 			{children}
-		</sessionContext.Provider>
+		</SessionContext.Provider>
 	);
 };
 

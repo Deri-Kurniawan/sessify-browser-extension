@@ -1,6 +1,5 @@
-/// <reference types="chrome"/>
-
-import { traceError } from "../utils";
+import { browser } from "#imports";
+import { traceError } from "@/lib/utils";
 
 /**
  * A utility class for managing local storage in a Chrome Extension.
@@ -16,7 +15,7 @@ class Storage {
 	 */
 	static async get<T>(key: string): Promise<T | null> {
 		try {
-			const result = await chrome.storage.local.get(key);
+			const result = await browser.storage.local.get(key);
 			return (result[key] as T) ?? null;
 		} catch (error) {
 			traceError("getStorage", error);
@@ -32,7 +31,7 @@ class Storage {
 	 */
 	static async set<T>(key: string, value: T): Promise<void> {
 		try {
-			await chrome.storage.local.set({ [key]: value });
+			await browser.storage.local.set({ [key]: value });
 		} catch (error) {
 			traceError("setStorage", error);
 			throw new StorageError(`Failed to set key "${key}" in storage`, error);
@@ -46,7 +45,7 @@ class Storage {
 	 */
 	static async remove(key: string): Promise<void> {
 		try {
-			await chrome.storage.local.remove(key);
+			await browser.storage.local.remove(key);
 		} catch (error) {
 			traceError("removeStorage", error);
 			throw new StorageError(
@@ -62,7 +61,7 @@ class Storage {
 	 */
 	static async clear(): Promise<void> {
 		try {
-			await chrome.storage.local.clear();
+			await browser.storage.local.clear();
 		} catch (error) {
 			traceError("clearStorage", error);
 			throw new StorageError("Failed to clear storage", error);

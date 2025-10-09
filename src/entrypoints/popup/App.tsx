@@ -1,7 +1,7 @@
 import type { ComponentProps, FC } from "react";
 import { createHashRouter, RouterProvider } from "react-router";
 import RootLayout from "@/components/layouts/RootLayout";
-import { SessionProvider } from "@/features/session/hooks/useSessions";
+import { SessionProvider } from "@/features/session/context/SessionContext";
 import SessionPage from "@/features/session/pages/SessionPage";
 import SettingsPage from "@/features/settings/pages/SettingsPage";
 
@@ -29,7 +29,7 @@ const App: FC<AppProps> = ({ launchType = "popup" }) => {
 	]);
 
 	return (
-		<SessionProvider>
+		<SessionProvider watchTabChange={launchType === "sidepanel"}>
 			<RouterProvider router={router} />
 		</SessionProvider>
 	);

@@ -1,6 +1,5 @@
-/// <reference types="chrome"/>
-
-import { traceError } from "../utils";
+import { type Browser, browser } from "#imports";
+import { traceError } from "@/lib/utils";
 
 /**
  * A utility class for managing cookies in a Chrome Extension.
@@ -15,10 +14,10 @@ class Cookie {
 	 * @throws {CookieError} If the retrieval fails.
 	 */
 	static async getAll(
-		data: chrome.cookies.GetAllDetails,
-	): Promise<chrome.cookies.Cookie[]> {
+		data: Browser.cookies.GetAllDetails,
+	): Promise<Browser.cookies.Cookie[]> {
 		try {
-			const cookies = await chrome.cookies.getAll({ ...data });
+			const cookies = await browser.cookies.getAll({ ...data });
 			return cookies;
 		} catch (error) {
 			traceError("getAllCookies", error);
@@ -33,10 +32,10 @@ class Cookie {
 	 * @throws {CookieError} If the setting fails.
 	 */
 	static async set(
-		cookie: chrome.cookies.SetDetails,
-	): Promise<chrome.cookies.Cookie | null> {
+		cookie: Browser.cookies.SetDetails,
+	): Promise<Browser.cookies.Cookie | null> {
 		try {
-			const setCookie = await chrome.cookies.set(cookie);
+			const setCookie = await browser.cookies.set(cookie);
 			return setCookie || null;
 		} catch (error) {
 			traceError("setCookie", error);
@@ -49,12 +48,12 @@ class Cookie {
 	 * @param cookies An array of cookie objects to set.
 	 * @throws {CookieError} If any setting fails.
 	 */
-	static async setMany(cookies: chrome.cookies.Cookie[]): Promise<void> {
+	static async setMany(cookies: Browser.cookies.Cookie[]): Promise<void> {
 		try {
 			const setPromises = cookies.map((cookie) => {
 				const protocol = cookie.secure ? "https:" : "http:";
 				const url = `${protocol}//${cookie.domain}${cookie.path || "/"}`;
-				return chrome.cookies.set({
+				return browser.cookies.set({
 					...cookie,
 					url,
 					path: cookie.path || "/",
@@ -79,7 +78,7 @@ class Cookie {
 	 */
 	static async remove(url: string, name: string): Promise<void> {
 		try {
-			await chrome.cookies.remove({ url, name });
+			await browser.cookies.remove({ url, name });
 		} catch (error) {
 			traceError("removeCookie", error);
 			throw new CookieError(
@@ -97,11 +96,11 @@ class Cookie {
 	 */
 	static async removeMany(
 		url: string,
-		cookies: chrome.cookies.Cookie[],
+		cookies: Browser.cookies.Cookie[],
 	): Promise<void> {
 		try {
 			const removePromises = cookies.map((cookie) =>
-				chrome.cookies.remove({ url, name: cookie.name }),
+				browser.cookies.remove({ url, name: cookie.name }),
 			);
 			await Promise.allSettled(removePromises);
 		} catch (error) {

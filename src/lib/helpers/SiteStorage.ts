@@ -1,6 +1,5 @@
-/// <reference types="chrome"/>
-
-import { traceError } from "../utils";
+import { type Browser, browser } from "#imports";
+import { traceError } from "@/lib/utils";
 import { BrowserTabs } from "./BrowserTabs";
 import { Cookie } from "./Cookie";
 
@@ -18,14 +17,14 @@ class SiteStorage {
 	static async getStorageFromCurrentTab(): Promise<{
 		localStorage: Record<string, string>;
 		sessionStorage: Record<string, string>;
-		cookies: chrome.cookies.Cookie[];
+		cookies: Browser.cookies.Cookie[];
 	}> {
 		try {
 			const tab = await BrowserTabs.getCurrentActive();
 			if (!tab?.id || !tab.url) {
 				return { localStorage: {}, sessionStorage: {}, cookies: [] };
 			}
-			const [result] = await chrome.scripting.executeScript({
+			const [result] = await browser.scripting.executeScript({
 				target: { tabId: tab.id },
 				func: (): {
 					localStorage: Record<string, string>;
@@ -57,7 +56,7 @@ class SiteStorage {
 			if (!tab?.id || !tab.url) {
 				return;
 			}
-			await chrome.scripting.executeScript({
+			await browser.scripting.executeScript({
 				target: { tabId: tab.id },
 				func: (): void => {
 					localStorage.clear();
@@ -80,7 +79,7 @@ class SiteStorage {
 	static async applyStorageToCurrentTab(state: {
 		localStorage: Record<string, string>;
 		sessionStorage: Record<string, string>;
-		cookies: chrome.cookies.Cookie[];
+		cookies: Browser.cookies.Cookie[];
 	}): Promise<void> {
 		try {
 			const tab = await BrowserTabs.getCurrentActive();
@@ -92,7 +91,7 @@ class SiteStorage {
 
 			await Promise.allSettled(
 				(state.cookies || []).map((cookie) =>
-					chrome.cookies.set({
+					browser.cookies.set({
 						url: url.origin,
 						name: cookie.name,
 						value: cookie.value,
@@ -106,7 +105,7 @@ class SiteStorage {
 				),
 			);
 
-			await chrome.scripting.executeScript({
+			await browser.scripting.executeScript({
 				target: { tabId: tab.id },
 				args: [state.localStorage, state.sessionStorage],
 				func: (localData, sessionData) => {
