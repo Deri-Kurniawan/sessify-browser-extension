@@ -4,11 +4,11 @@ import pkg from "@/../package.json";
 import { env } from "@/env";
 import { cn } from "@/lib/utils";
 
-interface FooterSectionProps {
+interface FooterProps {
 	className?: string;
 }
 
-export function FooterSection({ className = "" }: FooterSectionProps) {
+export function Footer({ className = "" }: FooterProps) {
 	return (
 		<footer className={cn("px-4 py-6", className)}>
 			<div className="flex flex-col items-center justify-between gap-4 md:flex-row">

@@ -46,5 +46,5 @@ export default function middleware(request: NextRequest) {
 
 // Configure which routes should trigger this middleware
 export const config = {
-	matcher: ["/"], // adjust to routes you want browser detection on
+	matcher: ["/((?!api|_next/static|_next/image|.*\\.png$).*)"],
 };

@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { FooterSection } from "@/components/FooterSection";
 import HeroSection from "@/components/HeroSection";
 import { env } from "@/env";
 
@@ -39,10 +38,12 @@ export default async function HomePage({ searchParams }: HomePageProps) {
 	const userBrowserType = params?.browser;
 	return (
 		<div className="container w-full px-4 mx-auto">
-			<div className="mt-20">
-				<HeroSection userBrowserType={userBrowserType} />
+			<div className="my-20">
+				<HeroSection
+					className="max-w-6xl mx-auto"
+					userBrowserType={userBrowserType}
+				/>
 			</div>
-			<FooterSection className="mt-6" />
 		</div>
 	);
 }
