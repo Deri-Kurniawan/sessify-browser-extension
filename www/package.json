@@ -18,7 +18,9 @@
     "build": "next build",
     "start": "next start -p 3001",
     "lint": "biome check",
-    "format": "biome format --write"
+    "lint:write": "biome check --write",
+    "format": "biome format",
+    "format:write": "biome format --write"
   },
   "dependencies": {
     "@radix-ui/react-slot": "^1.2.3",
