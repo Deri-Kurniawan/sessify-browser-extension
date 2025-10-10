@@ -7,28 +7,53 @@ import { Button } from "@/components/ui/Button";
 import { env } from "@/env";
 import { cn } from "@/lib/utils";
 
-const title = "Sessify - Browser Extension for Session Management";
+const title = "Feedback & Support - Sessify Browser Extension";
 const description =
-	"Sessify is a browser extension that helps you manage your browsing sessions effectively. Save, organize, and restore your tabs with ease.";
+	"Share your feedback, report bugs, or request features for Sessify. Help us improve the browser extension for better session management experience.";
 
 export const metadata: Metadata = {
 	title,
 	description,
+	keywords: [
+		"Sessify feedback",
+		"browser extension support",
+		"bug report",
+		"feature request",
+		"session management feedback",
+		"browser extension help",
+	],
+	robots: {
+		index: true,
+		follow: true,
+		googleBot: {
+			index: true,
+			follow: true,
+		},
+	},
 	openGraph: {
 		title,
 		description,
-		url: env.NEXT_PUBLIC_APP_URL,
+		url: `${env.NEXT_PUBLIC_APP_URL}/feedback`,
 		siteName: "Sessify",
 		images: [
 			{
 				url: `${env.NEXT_PUBLIC_APP_URL}/og-image.png`,
-				alt: "Sessify - Browser Extension for Session Management",
+				alt: "Sessify Feedback & Support - Browser Extension",
 				width: 1200,
 				height: 630,
 			},
 		],
 		locale: "en-US",
 		type: "website",
+	},
+	twitter: {
+		card: "summary_large_image",
+		title,
+		description,
+		images: [`${env.NEXT_PUBLIC_APP_URL}/og-image.png`],
+	},
+	alternates: {
+		canonical: `${env.NEXT_PUBLIC_APP_URL}/feedback`,
 	},
 };
 
