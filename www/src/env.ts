@@ -14,7 +14,7 @@ export const env = createEnv({
 	clientPrefix: "NEXT_PUBLIC",
 
 	client: {
-		NEXT_PUBLIC_APP_URL: z.url().min(1).default("http://localhost:3000"),
+		NEXT_PUBLIC_APP_URL: z.url().min(1).default("http://localhost:3001"),
 		NEXT_PUBLIC_GITHUB_URL: z
 			.url()
 			.min(1)

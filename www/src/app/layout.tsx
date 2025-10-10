@@ -17,6 +17,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
 	title: "Sessify - Session Manager",
 	description: "Save and restore your browser sessions with ease.",
+	icons: {
+		icon: "/favicon.ico",
+	},
 };
 
 export default function RootLayout({
