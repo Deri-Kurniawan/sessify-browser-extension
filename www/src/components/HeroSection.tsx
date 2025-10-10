@@ -49,9 +49,11 @@ const browserSupport = [
 
 const HeroSection = ({
 	userBrowserType = "chrome",
+	isDesktop = true,
 	className = "",
 }: {
 	userBrowserType?: string;
+	isDesktop?: boolean;
 	className?: string;
 }) => {
 	const supportedBrowser = browserSupport.find(
@@ -99,7 +101,7 @@ const HeroSection = ({
 
 					{/* CTA Buttons */}
 					<div className="flex flex-wrap justify-center gap-4">
-						{supportedBrowser ? (
+						{isDesktop && supportedBrowser ? (
 							<Button
 								size="lg"
 								className="bg-primary hover:bg-primary/90 text-primary-foreground capitalize"
@@ -121,7 +123,7 @@ const HeroSection = ({
 								disabled
 							>
 								<GlobeIcon className="size-5" />
-								Browser not supported
+								{isDesktop ? "Browser" : "Device"} not supported
 							</Button>
 						)}
 

@@ -7,6 +7,7 @@ export default function middleware(request: NextRequest) {
 	const userAgent = request.headers.get("user-agent") || "";
 
 	let browser = "unknown";
+	let device = "desktop";
 
 	// Chromium family
 	if (/edg/i.test(userAgent)) {
@@ -33,11 +34,26 @@ export default function middleware(request: NextRequest) {
 		browser = "firefox";
 	}
 
+	// Device detection
+	const mobileRegex =
+		/mobile|android|iphone|ipod|blackberry|windows phone|kindle|silk|playbook|bb10/i;
+	const tabletRegex = /ipad|tablet|playbook|silk|kindle/i;
+
+	if (mobileRegex.test(userAgent) && !tabletRegex.test(userAgent)) {
+		device = "mobile";
+	} else {
+		device = "desktop";
+	}
+
 	const url = request.nextUrl;
 
 	// Prevent infinite redirect loops
-	if (url.searchParams.get("browser") !== browser) {
+	const currentBrowser = url.searchParams.get("browser");
+	const currentDevice = url.searchParams.get("device");
+
+	if (currentBrowser !== browser || currentDevice !== device) {
 		url.searchParams.set("browser", browser);
+		url.searchParams.set("device", device);
 		return NextResponse.redirect(url);
 	}
 

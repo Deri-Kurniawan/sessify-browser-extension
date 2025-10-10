@@ -30,18 +30,21 @@ export const metadata: Metadata = {
 interface HomePageProps {
 	searchParams?: Promise<{
 		browser?: string;
+		device?: "mobile" | "desktop";
 	}>;
 }
 
 export default async function HomePage({ searchParams }: HomePageProps) {
 	const params = await searchParams;
 	const userBrowserType = params?.browser;
+	const isDesktop = params?.device === "desktop";
 	return (
 		<div className="container w-full px-4 mx-auto">
 			<div className="my-20">
 				<HeroSection
 					className="max-w-6xl mx-auto"
 					userBrowserType={userBrowserType}
+					isDesktop={isDesktop}
 				/>
 			</div>
 		</div>
