@@ -41,6 +41,19 @@ export default defineConfig({
 			},
 		],
 
+		commands: {
+			"toggle-feature": {
+				suggested_key: {
+					default: "Alt+Shift+S",
+					windows: "Alt+Shift+S",
+					linux: "Alt+Shift+S",
+					mac: "Command+Shift+S",
+					chromeos: "Alt+Shift+S",
+				},
+				description: "Toggle feature",
+			},
+		},
+
 		/**
 		 * Firefox
 		 * @see https://extensionworkshop.com/documentation/develop/extensions-and-the-add-on-id/#when-do-you-need-an-add-on-id
@@ -53,6 +66,20 @@ export default defineConfig({
 				// https://extensionworkshop.com/documentation/manage/updating-your-extension/
 				// "update_url": "https://example.com/updates.json"
 			},
+		},
+
+		/**
+		 * Other browsers (Chrome, Edge, Opera, Vivaldi, Brave, etc.)
+		 */
+		sidebar_action: {
+			default_panel: "sidepanel.html",
+			default_icon: {
+				16: "icons/16.png",
+				32: "icons/32.png",
+				48: "icons/48.png",
+				128: "icons/128.png",
+			},
+			default_title: "Sessify",
 		},
 	},
 });

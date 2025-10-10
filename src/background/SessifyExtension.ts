@@ -89,6 +89,12 @@ class SessifyExtension {
 
 		browser.tabs.onActivated.addListener(() => this._updateBadgeForActiveTab());
 		browser.tabs.onUpdated.addListener(() => this._updateBadgeForActiveTab());
+
+		browser.commands.onCommand.addListener((command) => {
+			if (command === "toggle-feature") {
+				browserActionAPI.openPopup();
+			}
+		});
 	}
 
 	/**
