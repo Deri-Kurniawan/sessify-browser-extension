@@ -1,6 +1,7 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { browser } from "#imports";
+import type { EnumBackgroundActionType } from "@/types/background";
 
 export const browserActionAPI = browser.action ?? browser.browserAction;
 
@@ -9,7 +10,7 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export async function sendToBackground<T = unknown>(message: {
-	action: EnumBackgroundAction;
+	action: EnumBackgroundActionType;
 	payload?: any;
 }): Promise<MessageResponse<T>> {
 	return await browser.runtime.sendMessage({ ...message });

@@ -2,6 +2,7 @@ import moment from "moment";
 import { parse as tldtsParse } from "tldts";
 import { type Browser, browser } from "#imports";
 import { CONFIGS } from "@/config";
+import { EnumBackgroundAction } from "@/constants";
 import {
 	BrowserTabs,
 	browserActionAPI,
@@ -9,6 +10,7 @@ import {
 	Storage,
 	traceError,
 } from "@/lib/utils";
+import type { EnumBackgroundActionType } from "@/types/background";
 
 /**
  * Main class for managing the Sessify Chrome extension background operations.
@@ -127,29 +129,30 @@ class SessifyExtension {
 	 * Processes the incoming request and returns appropriate response.
 	 */
 	private async _processRequest(request: any): Promise<MessageResponse> {
-		switch (request.action as EnumBackgroundAction) {
-			case "GET_FILTERED_SESSIONS_BY_ACTIVE_TAB":
+		switch (request.action as EnumBackgroundActionType) {
+			case EnumBackgroundAction.enum.GET_FILTERED_SESSIONS_BY_ACTIVE_TAB:
 				return await this._handleGetFilteredSessions();
 
-			case "SAVE_CURRENT_TAB_STORAGE_TO_EXTENSION_STORAGE":
+			case EnumBackgroundAction.enum
+				.SAVE_CURRENT_TAB_STORAGE_TO_EXTENSION_STORAGE:
 				return await this._handleSaveCurrentTabStorage(request.payload);
 
-			case "SWITCH_SESSION_BY_ID":
+			case EnumBackgroundAction.enum.SWITCH_SESSION_BY_ID:
 				return await this._handleSwitchSession(request.payload);
 
-			case "UPDATE_SESSION_BY_ID":
+			case EnumBackgroundAction.enum.UPDATE_SESSION_BY_ID:
 				return await this._handleUpdateSession(request.payload);
 
-			case "DELETE_SESSION_BY_ID":
+			case EnumBackgroundAction.enum.DELETE_SESSION_BY_ID:
 				return await this._handleDeleteSession(request.payload);
 
-			case "CREATE_NEW_SESSION":
+			case EnumBackgroundAction.enum.CREATE_NEW_SESSION:
 				return await this._handleCreateNewSession();
 
-			case "REFRESH_CURRENT_TAB":
+			case EnumBackgroundAction.enum.REFRESH_CURRENT_TAB:
 				return await this._handleRefreshCurrentTab();
 
-			case "GET_ACTIVE_SESSION":
+			case EnumBackgroundAction.enum.GET_ACTIVE_SESSION:
 				return await this._handleGetActiveSession();
 
 			default:
