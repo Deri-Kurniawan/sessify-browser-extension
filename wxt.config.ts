@@ -24,7 +24,6 @@ export default defineConfig({
 		version: pkg.version,
 		permissions: [
 			"sidePanel",
-			"contentSettings",
 			"cookies",
 			"storage",
 			"tabs",
