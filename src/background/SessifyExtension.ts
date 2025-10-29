@@ -1,11 +1,16 @@
-/// <reference types="chrome"/>
-/// <reference path="../types/globals.d.ts"/>
-
 import moment from "moment";
 import { parse as tldtsParse } from "tldts";
+import { type Browser, browser } from "#imports";
 import { CONFIGS } from "@/config";
-import { BrowserTabs, SiteStorage, Storage } from "../lib/helpers";
-import { traceError } from "../lib/utils";
+import { EnumBackgroundAction } from "@/constants";
+import {
+	BrowserTabs,
+	browserActionAPI,
+	SiteStorage,
+	Storage,
+	traceError,
+} from "@/lib/utils";
+import type { EnumBackgroundActionType } from "@/types/background";
 
 /**
  * Main class for managing the Sessify Chrome extension background operations.
@@ -32,15 +37,15 @@ class SessifyExtension {
 	 * Initializes the extension services.
 	 */
 	init(): void {
-		chrome.runtime.setUninstallURL(
-			chrome.runtime.getManifest().homepage_url as string,
+		browser.runtime.setUninstallURL(
+			browser.runtime.getManifest().homepage_url as string,
 		);
 
-		chrome.action.setBadgeTextColor({
-			color: CONFIGS.BADGE.COLORS.TEXT.DEFAULT,
+		browserActionAPI.setBadgeBackgroundColor({
+			color: CONFIGS.SETTINGS.DEFAULT.badgeColor,
 		});
-		chrome.action.setBadgeBackgroundColor({
-			color: CONFIGS.BADGE.COLORS.BACKGROUND.ACTIVE,
+		browserActionAPI.setBadgeTextColor({
+			color: CONFIGS.SETTINGS.DEFAULT.badgeTextColor,
 		});
 
 		this._registerEventListeners();
@@ -51,16 +56,28 @@ class SessifyExtension {
 	 * Registers all Chrome extension event listeners.
 	 */
 	private _registerEventListeners(): void {
-		chrome.runtime.onInstalled.addListener(() => {
-			console.log(`${chrome.runtime.getManifest().name} extension installed.`);
-			if (!this._isRunningInChrome) {
-				throw new SessifyExtensionError(
-					"Only Chrome extensions are supported at this time",
-				);
-			}
+		browser.runtime.onInstalled.addListener(() => {
+			console.log(`${browser.runtime.getManifest().name} extension installed.`);
+
+			browser.runtime.setUninstallURL(
+				`${browser.runtime.getManifest().homepage_url as string}/feedback?ref=uninstall`,
+			);
+
+			storage.defineItem(`local:${CONFIGS.KEYS.ACTIVE_SESSION_ID}`, {
+				init: () => "",
+			});
+			storage.defineItem(`local:${CONFIGS.KEYS.SESSIONS}`, {
+				init: () => [],
+			});
+
+			storage.defineItem(`sync:${CONFIGS.KEYS.SETTINGS}`, {
+				init: () => ({
+					...CONFIGS.SETTINGS.DEFAULT,
+				}),
+			});
 		});
 
-		chrome.runtime.onMessage.addListener((request, _, sendResponse) => {
+		browser.runtime.onMessage.addListener((request, _, sendResponse) => {
 			this._handleMessageAsync(request, sendResponse);
 
 			/**
@@ -70,8 +87,14 @@ class SessifyExtension {
 			return true;
 		});
 
-		chrome.tabs.onActivated.addListener(() => this._updateBadgeForActiveTab());
-		chrome.tabs.onUpdated.addListener(() => this._updateBadgeForActiveTab());
+		browser.tabs.onActivated.addListener(() => this._updateBadgeForActiveTab());
+		browser.tabs.onUpdated.addListener(() => this._updateBadgeForActiveTab());
+
+		browser.commands.onCommand.addListener((command) => {
+			if (command === "toggle-feature") {
+				browserActionAPI.openPopup();
+			}
+		});
 	}
 
 	/**
@@ -112,29 +135,30 @@ class SessifyExtension {
 	 * Processes the incoming request and returns appropriate response.
 	 */
 	private async _processRequest(request: any): Promise<MessageResponse> {
-		switch (request.action as EnumBackgroundAction) {
-			case "GET_FILTERED_SESSIONS_BY_ACTIVE_TAB":
+		switch (request.action as EnumBackgroundActionType) {
+			case EnumBackgroundAction.enum.GET_FILTERED_SESSIONS_BY_ACTIVE_TAB:
 				return await this._handleGetFilteredSessions();
 
-			case "SAVE_CURRENT_TAB_STORAGE_TO_EXTENSION_STORAGE":
+			case EnumBackgroundAction.enum
+				.SAVE_CURRENT_TAB_STORAGE_TO_EXTENSION_STORAGE:
 				return await this._handleSaveCurrentTabStorage(request.payload);
 
-			case "SWITCH_SESSION_BY_ID":
+			case EnumBackgroundAction.enum.SWITCH_SESSION_BY_ID:
 				return await this._handleSwitchSession(request.payload);
 
-			case "UPDATE_SESSION_BY_ID":
+			case EnumBackgroundAction.enum.UPDATE_SESSION_BY_ID:
 				return await this._handleUpdateSession(request.payload);
 
-			case "DELETE_SESSION_BY_ID":
+			case EnumBackgroundAction.enum.DELETE_SESSION_BY_ID:
 				return await this._handleDeleteSession(request.payload);
 
-			case "CREATE_NEW_SESSION":
+			case EnumBackgroundAction.enum.CREATE_NEW_SESSION:
 				return await this._handleCreateNewSession();
 
-			case "REFRESH_CURRENT_TAB":
+			case EnumBackgroundAction.enum.REFRESH_CURRENT_TAB:
 				return await this._handleRefreshCurrentTab();
 
-			case "GET_ACTIVE_SESSION":
+			case EnumBackgroundAction.enum.GET_ACTIVE_SESSION:
 				return await this._handleGetActiveSession();
 
 			default:
@@ -307,7 +331,7 @@ class SessifyExtension {
 			if (shouldNavigate) {
 				needsNavigation = true;
 				const targetUrl = `${currentTabUrl.protocol}//${sessionFqdn}${sessionPort ? `:${sessionPort}` : ""}`;
-				await chrome.tabs.update(currentTab.id, { url: targetUrl });
+				await browser.tabs.update(currentTab.id, { url: targetUrl });
 				await new Promise((resolve) => setTimeout(resolve, 1000));
 				const updatedTab = await BrowserTabs.getCurrentActive();
 				if (!updatedTab?.id) {
@@ -321,10 +345,7 @@ class SessifyExtension {
 
 		await SiteStorage.clearStorageForCurrentTab();
 		await SiteStorage.applyStorageToCurrentTab(targetSession.state);
-		await Storage.set(
-			CONFIGS.SESSION_STORAGE.KEYS.ACTIVE_SESSION_ID,
-			sessionId,
-		);
+		await Storage.set(CONFIGS.KEYS.ACTIVE_SESSION_ID, sessionId);
 
 		this._updateBadgeForActiveTab();
 
@@ -376,7 +397,7 @@ class SessifyExtension {
 		const updatedSessions = [...(existingSessions || [])];
 		updatedSessions[sessionIndex] = updatedSession;
 
-		await Storage.set(CONFIGS.SESSION_STORAGE.KEYS.SESSIONS, updatedSessions);
+		await Storage.set(CONFIGS.KEYS.SESSIONS, updatedSessions);
 
 		this._updateBadgeForActiveTab();
 
@@ -408,10 +429,7 @@ class SessifyExtension {
 			(session) => session.id !== sessionId,
 		);
 
-		await Storage.set(
-			CONFIGS.SESSION_STORAGE.KEYS.SESSIONS,
-			filteredSessions || [],
-		);
+		await Storage.set(CONFIGS.KEYS.SESSIONS, filteredSessions || []);
 
 		this._updateBadgeForActiveTab();
 
@@ -436,7 +454,7 @@ class SessifyExtension {
 		}
 
 		await SiteStorage.clearStorageForCurrentTab();
-		await Storage.remove(CONFIGS.SESSION_STORAGE.KEYS.ACTIVE_SESSION_ID);
+		await Storage.remove(CONFIGS.KEYS.ACTIVE_SESSION_ID);
 
 		this._updateBadgeForActiveTab();
 
@@ -474,7 +492,7 @@ class SessifyExtension {
 		MessageResponse<string | null>
 	> {
 		const activeSessionId = await Storage.get<string>(
-			CONFIGS.SESSION_STORAGE.KEYS.ACTIVE_SESSION_ID,
+			CONFIGS.KEYS.ACTIVE_SESSION_ID,
 		);
 
 		return {
@@ -502,7 +520,7 @@ class SessifyExtension {
 	 * Creates a new session object.
 	 */
 	private async _createNewSession(
-		currentTab: chrome.tabs.Tab,
+		currentTab: Browser.tabs.Tab,
 		tabUrl: URL,
 		title: string | null,
 		tabStorage: Awaited<
@@ -544,11 +562,8 @@ class SessifyExtension {
 			? [...existingSessions, newSession]
 			: [newSession];
 
-		await Storage.set(CONFIGS.SESSION_STORAGE.KEYS.SESSIONS, updatedSessions);
-		await Storage.set(
-			CONFIGS.SESSION_STORAGE.KEYS.ACTIVE_SESSION_ID,
-			newSession.id,
-		);
+		await Storage.set(CONFIGS.KEYS.SESSIONS, updatedSessions);
+		await Storage.set(CONFIGS.KEYS.ACTIVE_SESSION_ID, newSession.id);
 	}
 
 	/**
@@ -557,7 +572,7 @@ class SessifyExtension {
 	private _sortSessionsByRelevance(
 		sessions: AppSession[],
 		activeTabUrl: URL,
-		activeTab: chrome.tabs.Tab | null,
+		activeTab: Browser.tabs.Tab | null,
 	): AppSession[] {
 		return sessions
 			.map((session) => {
@@ -593,13 +608,13 @@ class SessifyExtension {
 	}
 
 	/**
-	 * Checks if the extension is running in Chrome.
+	 * Checks if the extension is running in browser.
 	 */
-	private get _isRunningInChrome(): boolean {
-		return (
-			typeof chrome !== "undefined" && !!chrome.runtime && !!chrome.runtime.id
-		);
-	}
+	// private get _isRunningInChrome(): boolean {
+	// 	return (
+	// 		typeof chrome !== "undefined" && !!browser.runtime && !!browser.runtime.id
+	// 	);
+	// }
 
 	/**
 	 * Updates the badge text based on the number of sessions for the current tab.
@@ -615,19 +630,19 @@ class SessifyExtension {
 				);
 
 				if (matchingSessions.length === 0) {
-					chrome.action.setBadgeText({ text: "" });
+					browserActionAPI.setBadgeText({ text: "" });
 					return;
 				}
 
 				const badgeText =
-					matchingSessions.length > CONFIGS.BADGE.MAX_COUNT
-						? `${CONFIGS.BADGE.MAX_COUNT}+`
+					matchingSessions.length > CONFIGS.SETTINGS.DEFAULT.badgeMaxCount
+						? `${CONFIGS.SETTINGS.DEFAULT.badgeMaxCount}+`
 						: matchingSessions.length.toString();
 
-				chrome.action.setBadgeText({ text: badgeText });
+				browserActionAPI.setBadgeText({ text: badgeText });
 			} catch {
 				// traceError("_updateBadgeForActiveTab", error);
-				chrome.action.setBadgeText({ text: "" });
+				browserActionAPI.setBadgeText({ text: "" });
 			}
 		})();
 	}
@@ -673,11 +688,7 @@ class SessifyExtension {
 	 * @returns A promise that resolves to the array of sessions.
 	 */
 	private async _getAllSessions(): Promise<AppSession[]> {
-		return (
-			(await Storage.get<AppSession[]>(
-				CONFIGS.SESSION_STORAGE.KEYS.SESSIONS,
-			)) || []
-		);
+		return (await Storage.get<AppSession[]>(CONFIGS.KEYS.SESSIONS)) || [];
 	}
 
 	/**

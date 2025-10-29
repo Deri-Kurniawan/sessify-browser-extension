@@ -1,6 +1,5 @@
-/// <reference types="chrome"/>
-
-import { traceError } from "../utils";
+import { type Browser, browser } from "#imports";
+import { traceError } from "@/lib/utils";
 
 /**
  * A utility class for managing browser tabs using the Chrome Extensions API.
@@ -13,9 +12,9 @@ class BrowserTabs {
 	 * @returns A promise that resolves to the active tab or null if none found.
 	 * @throws {BrowserTabsError} If the query fails.
 	 */
-	static async getCurrentActive(): Promise<chrome.tabs.Tab | null> {
+	static async getCurrentActive(): Promise<Browser.tabs.Tab | null> {
 		try {
-			const tabs = await chrome.tabs.query({
+			const tabs = await browser.tabs.query({
 				active: true,
 				currentWindow: true,
 			});
@@ -33,7 +32,7 @@ class BrowserTabs {
 	 */
 	static async reload(tabId: number): Promise<void> {
 		try {
-			await chrome.tabs.reload(tabId);
+			await browser.tabs.reload(tabId);
 		} catch (error) {
 			traceError("reloadTab", error);
 			throw new BrowserTabsError(`Failed to reload tab ${tabId}`, error);
@@ -47,7 +46,7 @@ class BrowserTabs {
 	 */
 	static async close(tabId: number): Promise<void> {
 		try {
-			await chrome.tabs.remove(tabId);
+			await browser.tabs.remove(tabId);
 		} catch (error) {
 			traceError("closeTab", error);
 			throw new BrowserTabsError(`Failed to close tab ${tabId}`, error);
@@ -60,9 +59,9 @@ class BrowserTabs {
 	 * @returns A promise that resolves to the created tab.
 	 * @throws {BrowserTabsError} If the creation fails.
 	 */
-	static async create(url: string): Promise<chrome.tabs.Tab> {
+	static async create(url: string): Promise<Browser.tabs.Tab> {
 		try {
-			const tab = await chrome.tabs.create({ url });
+			const tab = await browser.tabs.create({ url });
 			return tab;
 		} catch (error) {
 			traceError("createTab", error);

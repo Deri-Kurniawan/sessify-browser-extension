@@ -16,10 +16,9 @@ Chrome extension for managing and switching between multiple browser sessions ef
 ## 📦 Tech Stack
 
 - [React 19](https://react.dev/)
-- [Vite](https://vitejs.dev/)
 - [Tailwind CSS](https://tailwindcss.com/)
-- [CRXJS](https://crxjs.dev/vite-plugin)
 - [TypeScript](https://www.typescriptlang.org/)
+- [WXT](https://wxt.dev/) is on top of [CRXJS](https://crxjs.dev/) and use [Vite](https://vitejs.dev/)
 
 ---
 

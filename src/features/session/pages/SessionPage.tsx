@@ -14,7 +14,7 @@ import Placeholder, {
 	PlaceholderTitle,
 } from "@/components/Placeholder";
 import TopBar from "@/components/TopBar";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/Button";
 import {
 	Dialog,
 	DialogClose,
@@ -24,13 +24,13 @@ import {
 	DialogHeader,
 	DialogTitle,
 	DialogTrigger,
-} from "@/components/ui/dialog";
+} from "@/components/ui/Dialog";
 import {
 	Tooltip,
 	TooltipContent,
 	TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { useSessions } from "@/features/session/hooks/useSessions";
+} from "@/components/ui/Tooltip";
+import { useSessions } from "@/features/session/context/SessionContext";
 import { cn } from "@/lib/utils";
 import EditSessionDialog from "../components/SessionDetailDialog";
 

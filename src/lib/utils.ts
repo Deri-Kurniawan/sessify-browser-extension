@@ -1,29 +1,19 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { browser } from "#imports";
+import type { EnumBackgroundActionType } from "@/types/background";
+
+export const browserActionAPI = browser.action ?? browser.browserAction;
 
 export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs));
 }
 
-export async function sendToBackground<T>(message: {
-	action: EnumBackgroundAction;
+export async function sendToBackground<T = unknown>(message: {
+	action: EnumBackgroundActionType;
 	payload?: any;
 }): Promise<MessageResponse<T>> {
-	return new Promise((resolve) => {
-		window.chrome.runtime.sendMessage(
-			message,
-			(response: MessageResponse<T>) => {
-				if (window.chrome.runtime.lastError) {
-					resolve({
-						success: false,
-						message: window.chrome.runtime.lastError.message || "Unknown error",
-					});
-				} else {
-					resolve(response);
-				}
-			},
-		);
-	});
+	return await browser.runtime.sendMessage({ ...message });
 }
 
 export const traceError = (operation: string, error: unknown): void => {
@@ -39,4 +29,4 @@ export const traceError = (operation: string, error: unknown): void => {
 	});
 };
 
-export * from "./helpers";
+export * from "./helpers/index";

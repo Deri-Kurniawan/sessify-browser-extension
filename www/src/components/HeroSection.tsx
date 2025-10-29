@@ -1,57 +1,72 @@
 import {
 	CodeIcon,
+	FileCode2Icon,
 	GlobeIcon,
 	ShieldIcon,
-	StarIcon,
 	ZapIcon,
 } from "lucide-react";
 import Image from "next/image";
 import { FaChrome, FaEdge, FaOpera } from "react-icons/fa";
-import { SiBrave, SiVivaldi } from "react-icons/si";
+import { SiBrave, SiFirefox, SiVivaldi } from "react-icons/si";
 import extensionSidepanelSnapshot from "@/assets/images/extension-sidepanel-snapshot.png";
+import { Badge } from "@/components/ui/Badge";
+import { Button } from "@/components/ui/Button";
 import { env } from "@/env";
-import { Badge } from "./ui/badge";
-import { Button } from "./ui/button";
+import { cn } from "@/lib/utils";
 
 const browserSupport = [
 	{
 		name: "chrome",
-		storeUrl: "https://chrome.google.com/webstore",
+		storeUrl:
+			"https://chromewebstore.google.com/detail/fanchobbdinkeiainjehcdkmdggdclkc?utm_source=item-share-cb",
 		icon: <FaChrome className="size-5" />,
 	},
 	{
 		name: "edge",
-		storeUrl: "https://microsoftedge.microsoft.com/addons",
+		storeUrl:
+			"https://chromewebstore.google.com/detail/fanchobbdinkeiainjehcdkmdggdclkc?utm_source=item-share-cb",
 		icon: <FaEdge className="size-5" />,
 	},
 	{
 		name: "opera",
-		storeUrl: "https://chrome.google.com/webstore/category/extensions",
+		storeUrl:
+			"https://chromewebstore.google.com/detail/fanchobbdinkeiainjehcdkmdggdclkc?utm_source=item-share-cb",
 		icon: <FaOpera className="size-5" />,
 	},
 	{
 		name: "brave",
-		storeUrl: "https://chrome.google.com/webstore",
+		storeUrl:
+			"https://chromewebstore.google.com/detail/fanchobbdinkeiainjehcdkmdggdclkc?utm_source=item-share-cb",
 		icon: <SiBrave className="size-5" />,
 	},
 	{
 		name: "vivaldi",
-		storeUrl: "https://chrome.google.com/webstore",
+		storeUrl:
+			"https://chromewebstore.google.com/detail/fanchobbdinkeiainjehcdkmdggdclkc?utm_source=item-share-cb",
 		icon: <SiVivaldi className="size-5" />,
+	},
+	{
+		name: "firefox",
+		storeUrl: `${env.NEXT_PUBLIC_GITHUB_URL}/releases`,
+		icon: <SiFirefox className="size-5" />,
 	},
 ];
 
 const HeroSection = ({
 	userBrowserType = "chrome",
+	isDesktop = true,
+	className = "",
 }: {
 	userBrowserType?: string;
+	isDesktop?: boolean;
+	className?: string;
 }) => {
 	const supportedBrowser = browserSupport.find(
 		(b) => b.name === userBrowserType,
 	);
 
 	return (
-		<section className="relative overflow-hidden">
+		<section className={cn("relative overflow-hidden", className)}>
 			<div className="grid items-center gap-12 lg:grid-cols-1">
 				{/* Content */}
 				<div className="flex flex-col items-center justify-center space-y-8">
@@ -61,14 +76,16 @@ const HeroSection = ({
 							Privacy First
 						</Badge>
 
-						<h1 className="text-4xl font-bold leading-tight lg:text-6xl text-balance">
-							Sessify—
-							<span className="text-primary">Session Manager</span>
-						</h1>
+						<div>
+							<h1 className="text-pretty text-4xl font-semibold tracking-tight md:text-5xl">
+								Sessify—
+								<span className="text-primary">Session Manager</span>
+							</h1>
 
-						<p className="text-xl lg:text-2xl text-muted-foreground text-pretty">
-							No more repetitive logins—store sessions, swap in seconds.
-						</p>
+							<p className="mt-3 max-w-2xl text-muted-foreground leading-relaxed">
+								No more repetitive logins—store sessions, swap in seconds.
+							</p>
+						</div>
 					</div>
 
 					{/* Feature highlights */}
@@ -89,10 +106,10 @@ const HeroSection = ({
 
 					{/* CTA Buttons */}
 					<div className="flex flex-wrap justify-center gap-4">
-						{supportedBrowser ? (
+						{isDesktop && supportedBrowser ? (
 							<Button
 								size="lg"
-								className="bg-primary hover:bg-primary/90 text-primary-foreground"
+								className="bg-primary hover:bg-primary/90 text-primary-foreground capitalize"
 								asChild
 							>
 								<a
@@ -111,18 +128,18 @@ const HeroSection = ({
 								disabled
 							>
 								<GlobeIcon className="size-5" />
-								Browser not supported
+								{isDesktop ? "Browser" : "Device"} not supported
 							</Button>
 						)}
 
 						<Button variant="outline" size="lg" asChild>
 							<a
-								href={env.NEXT_PUBLIC_GITHUB_URL}
+								href={`${env.NEXT_PUBLIC_GITHUB_URL}/releases`}
 								target="_blank"
 								rel="noopener noreferrer"
 							>
-								<StarIcon className="size-5" />
-								Star on GitHub
+								<FileCode2Icon className="size-5" />
+								GitHub Release
 							</a>
 						</Button>
 					</div>

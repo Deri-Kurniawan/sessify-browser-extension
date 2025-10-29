@@ -10,7 +10,8 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
-import { Button } from "@/components/ui/button";
+import type { Browser } from "#imports";
+import { Button } from "@/components/ui/Button";
 import {
 	Dialog,
 	DialogClose,
@@ -19,7 +20,7 @@ import {
 	DialogHeader,
 	DialogTitle,
 	DialogTrigger,
-} from "@/components/ui/dialog";
+} from "@/components/ui/Dialog";
 import {
 	Form,
 	FormControl,
@@ -27,14 +28,14 @@ import {
 	FormItem,
 	FormLabel,
 	FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+} from "@/components/ui/Form";
+import { Input } from "@/components/ui/Input";
 import {
 	Tooltip,
 	TooltipContent,
 	TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { useSessions } from "@/features/session/hooks/useSessions";
+} from "@/components/ui/Tooltip";
+import { useSessions } from "@/features/session/context/SessionContext";
 
 interface SessionDetailDialogDialogProps {
 	id: string;
@@ -92,7 +93,7 @@ const SessionDetailDialogDialog: FC<SessionDetailDialogDialogProps> = ({
 	};
 
 	const formatStorageData = (
-		data: Record<string, string> | chrome.cookies.Cookie[],
+		data: Record<string, string> | Browser.cookies.Cookie[],
 	) => {
 		const entries = Object.entries(data);
 		if (entries.length === 0) return "No data";
