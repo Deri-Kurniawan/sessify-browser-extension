@@ -7,6 +7,10 @@ on:
         type: boolean
         description: Skip submission and perform a dry run
 
+permissions:
+  contents: write
+  pull-requests: write
+
 jobs:
   validate:
     name: Validate

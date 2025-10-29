@@ -2,7 +2,7 @@ import { SettingsIcon, UsersIcon } from "lucide-react";
 import type { FC } from "react";
 import { Outlet } from "react-router";
 import NavBar from "@/components/NavBar";
-import { Toaster } from "@/components/ui/Sonner";
+import { Toaster } from "../ui/Sonner";
 
 interface RootLayoutProps {
 	launchType?: "popup" | "sidepanel";
