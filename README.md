@@ -1,52 +1,58 @@
-# React + Vite + CRXJS
+# Sessify
 
-This template helps you quickly start developing Chrome extensions with React, TypeScript and Vite. It includes the CRXJS Vite plugin for seamless Chrome extension development.
+Chrome extension for managing and switching between multiple browser sessions efficiently.
 
-## Features
+---
 
-- React with TypeScript
-- TypeScript support
-- Vite build tool
-- CRXJS Vite plugin integration
-- Chrome extension manifest configuration
+## 🚀 Features
 
-## Quick Start
+- 🔄 Quickly switch between multiple sessions/accounts
+- 👤 Manage independent browser contexts
+- ⚡ Built with [React 19](https://react.dev/), [Vite](https://vitejs.dev/), and [Tailwind CSS](https://tailwindcss.com/)
+- 🧩 Powered by [CRXJS](https://crxjs.dev/vite-plugin) for smooth Chrome extension development
 
-1. Install dependencies:
+---
 
-```bash
-npm install
-```
+## 📦 Tech Stack
 
-2. Start development server:
+- [React 19](https://react.dev/)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [TypeScript](https://www.typescriptlang.org/)
+- [WXT](https://wxt.dev/) is on top of [CRXJS](https://crxjs.dev/) and use [Vite](https://vitejs.dev/)
 
-```bash
-npm run dev
-```
+---
 
-3. Open Chrome and navigate to `chrome://extensions/`, enable "Developer mode", and load the unpacked extension from the `dist` directory.
+## 🛠️ Development
 
-4. Build for production:
+Clone the repository and install dependencies:
 
 ```bash
-npm run build
+git clone https://github.com/yourusername/sessify.git
+cd sessify
+bun install
 ```
 
-## Project Structure
+Run the development server:
 
-- `src/popup/` - Extension popup UI
-- `src/content/` - Content scripts
-- `manifest.config.ts` - Chrome extension manifest configuration
+```bash
+bun run dev
+```
 
-## Documentation
+Build the extension:
 
-- [React Documentation](https://reactjs.org/)
-- [Vite Documentation](https://vitejs.dev/)
-- [CRXJS Documentation](https://crxjs.dev/vite-plugin)
+```bash
+bun run build
+```
 
-## Chrome Extension Development Notes
+Load the extension in Chrome:
 
-- Use `manifest.config.ts` to configure your extension
-- The CRXJS plugin automatically handles manifest generation
-- Content scripts should be placed in `src/content/`
-- Popup UI should be placed in `src/popup/`
+1. Open Chrome and go to `chrome://extensions/`
+2. Enable "Developer mode"
+3. Click "Load unpacked" and select the `dist` directory
+4. Enjoy managing your sessions!
+
+---
+
+## 📄 License
+
+This project is licensed under the [MIT License](https://opensource.org/license/mit/). See the [LICENSE](LICENSE) file for details.
