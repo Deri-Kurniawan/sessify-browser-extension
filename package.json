@@ -3,8 +3,8 @@
   "launcherName": "Sessify",
   "description": "Manage and switch between multiple browser sessions effortlessly. Save and switch session with ease.",
   "private": true,
-  "version": "1.0.0",
-  "version_name": "1.0.0",
+  "version": "0.0.0",
+  "version_name": "0.0.0",
   "type": "module",
   "author": {
     "name": "Deri Kurniawan",
