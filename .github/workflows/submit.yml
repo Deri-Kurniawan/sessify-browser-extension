@@ -43,6 +43,7 @@ jobs:
         run: |
           bunx changelogen@latest --bump
           NEW_VERSION=$(bun --print 'require("./package.json").version')
+          bun --eval "const fs = require('fs'); const pkg = JSON.parse(fs.readFileSync('./package.json', 'utf8')); pkg.version_name = pkg.version; fs.writeFileSync('./package.json', JSON.stringify(pkg, null, 2) + '\n');"
           echo "newVersion=$NEW_VERSION" >> "$GITHUB_OUTPUT"
 
       - name: Build and Zip

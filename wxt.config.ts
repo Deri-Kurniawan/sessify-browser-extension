@@ -22,6 +22,7 @@ export default defineConfig({
 		},
 		homepage_url: pkg.homepage,
 		version: pkg.version,
+		version_name: pkg.version_name || pkg.version,
 		permissions: [
 			"sidePanel",
 			"cookies",
