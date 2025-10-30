@@ -17,9 +17,7 @@ export default defineConfig({
 		manifest_version: 3,
 		name: pkg.launcherName || pkg.name,
 		description: pkg.description,
-		author: {
-			email: pkg.author.email,
-		},
+		author: pkg.author.name as any,
 		homepage_url: pkg.homepage,
 		version: pkg.version,
 		version_name: pkg.version_name || pkg.version,
@@ -36,11 +34,10 @@ export default defineConfig({
 		host_permissions: ["https://*/*", "http://*/*"],
 		content_scripts: [
 			{
-				js: ["src/entrypoints/content.ts"],
+				js: ["content-scripts/content.js"],
 				matches: ["http://*/*", "https://*/*"],
 			},
 		],
-
 		commands: {
 			"toggle-feature": {
 				suggested_key: {
@@ -61,7 +58,7 @@ export default defineConfig({
 		 */
 		browser_specific_settings: {
 			gecko: {
-				id: "@sessify-dev-extension-id",
+				id: "{65005012-da8c-4536-9b03-6248965f257d}",
 				strict_min_version: "58.0",
 				// https://extensionworkshop.com/documentation/manage/updating-your-extension/
 				// "update_url": "https://example.com/updates.json"
