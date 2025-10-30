@@ -17,7 +17,7 @@ export default function Navbar() {
           className="flex items-center gap-2 h-full"
         >
           <Image
-            src="/favicon.ico"
+            src="/icon.png"
             alt=""
             width={20}
             height={20}

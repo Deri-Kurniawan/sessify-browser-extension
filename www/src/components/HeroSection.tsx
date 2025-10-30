@@ -47,8 +47,9 @@ const browserSupport = [
 	},
 	{
 		name: "firefox",
-		storeUrl: `${env.NEXT_PUBLIC_GITHUB_URL}/releases`,
+		storeUrl: "https://addons.mozilla.org/en-US/firefox/addon/sessify",
 		icon: <SiFirefox className="size-5" />,
+		mobileSupport: true,
 	},
 ];
 
@@ -106,7 +107,8 @@ const HeroSection = ({
 
 					{/* CTA Buttons */}
 					<div className="flex flex-wrap justify-center gap-4">
-						{isDesktop && supportedBrowser ? (
+						{supportedBrowser &&
+						(isDesktop || supportedBrowser.mobileSupport) ? (
 							<Button
 								size="lg"
 								className="bg-primary hover:bg-primary/90 text-primary-foreground capitalize"
@@ -128,7 +130,7 @@ const HeroSection = ({
 								disabled
 							>
 								<GlobeIcon className="size-5" />
-								{isDesktop ? "Browser" : "Device"} not supported
+								{isDesktop ? "Unsupported Browser" : "Unsupported on Mobile"}
 							</Button>
 						)}
 
