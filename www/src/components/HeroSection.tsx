@@ -6,52 +6,12 @@ import {
 	ZapIcon,
 } from "lucide-react";
 import Image from "next/image";
-import { FaChrome, FaEdge, FaOpera } from "react-icons/fa";
-import { SiBrave, SiFirefox, SiVivaldi } from "react-icons/si";
 import extensionSidepanelSnapshot from "@/assets/images/extension-sidepanel-snapshot.png";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
+import { browserSupport } from "@/configs/browser-support";
 import { env } from "@/env";
 import { cn } from "@/lib/utils";
-
-const browserSupport = [
-	{
-		name: "chrome",
-		storeUrl:
-			"https://chromewebstore.google.com/detail/fanchobbdinkeiainjehcdkmdggdclkc?utm_source=item-share-cb",
-		icon: <FaChrome className="size-5" />,
-	},
-	{
-		name: "edge",
-		storeUrl:
-			"https://chromewebstore.google.com/detail/fanchobbdinkeiainjehcdkmdggdclkc?utm_source=item-share-cb",
-		icon: <FaEdge className="size-5" />,
-	},
-	{
-		name: "opera",
-		storeUrl:
-			"https://chromewebstore.google.com/detail/fanchobbdinkeiainjehcdkmdggdclkc?utm_source=item-share-cb",
-		icon: <FaOpera className="size-5" />,
-	},
-	{
-		name: "brave",
-		storeUrl:
-			"https://chromewebstore.google.com/detail/fanchobbdinkeiainjehcdkmdggdclkc?utm_source=item-share-cb",
-		icon: <SiBrave className="size-5" />,
-	},
-	{
-		name: "vivaldi",
-		storeUrl:
-			"https://chromewebstore.google.com/detail/fanchobbdinkeiainjehcdkmdggdclkc?utm_source=item-share-cb",
-		icon: <SiVivaldi className="size-5" />,
-	},
-	{
-		name: "firefox",
-		storeUrl: "https://addons.mozilla.org/en-US/firefox/addon/sessify",
-		icon: <SiFirefox className="size-5" />,
-		mobileSupport: true,
-	},
-];
 
 const HeroSection = ({
 	userBrowserType = "chrome",

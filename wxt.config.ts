@@ -29,6 +29,12 @@ export default defineConfig({
 			"activeTab",
 			"scripting",
 			"unlimitedStorage",
+			/**
+			 * Caution: Using "<all_urls>" permission may lead to your extension being rejected during the review process for some browsers.
+			 * 
+			 * Publisher restrictions:
+			 * - [Opera Add-on Store]: Manifest V3 extensions require URL permissions to only be present in the"host_permissions" field, please move them there: {''}
+			 */
 			"<all_urls>",
 		],
 		host_permissions: ["https://*/*", "http://*/*"],
