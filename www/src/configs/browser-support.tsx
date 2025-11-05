@@ -1,29 +1,32 @@
 import { FaChrome, FaEdge, FaOpera } from "react-icons/fa";
 import { SiBrave, SiFirefoxbrowser, SiVivaldi } from "react-icons/si";
 
-export const browserSupport = [
+type BrowserSupport = {
+    name: string;
+    storeUrl: string;
+    icon: React.ReactNode;
+    mobileSupport?: boolean;
+};
+
+export const browserSupport: BrowserSupport[] = [
     {
         name: "chrome",
-        storeUrl:
-            "https://chromewebstore.google.com/detail/fanchobbdinkeiainjehcdkmdggdclkc?utm_source=item-share-cb",
+        storeUrl: "https://chromewebstore.google.com/detail/fanchobbdinkeiainjehcdkmdggdclkc?utm_source=item-share-cb",
         icon: <FaChrome className="size-5" />,
     },
     {
         name: "edge",
-        storeUrl:
-            "https://microsoftedge.microsoft.com/addons/detail/sessify/agaognhoaaiimiajnnanlcmnfgoipffk",
+        storeUrl: "https://microsoftedge.microsoft.com/addons/detail/sessify/agaognhoaaiimiajnnanlcmnfgoipffk",
         icon: <FaEdge className="size-5" />,
     },
     {
         name: "opera",
-        storeUrl:
-            "https://chromewebstore.google.com/detail/fanchobbdinkeiainjehcdkmdggdclkc?utm_source=item-share-cb",
+        storeUrl: "https://chromewebstore.google.com/detail/fanchobbdinkeiainjehcdkmdggdclkc?utm_source=item-share-cb",
         icon: <FaOpera className="size-5" />,
     },
     {
         name: "brave",
-        storeUrl:
-            "https://chromewebstore.google.com/detail/fanchobbdinkeiainjehcdkmdggdclkc?utm_source=item-share-cb",
+        storeUrl: "https://chromewebstore.google.com/detail/fanchobbdinkeiainjehcdkmdggdclkc?utm_source=item-share-cb",
         icon: <SiBrave className="size-5" />,
     },
     {
@@ -36,6 +39,5 @@ export const browserSupport = [
         name: "firefox",
         storeUrl: "https://addons.mozilla.org/en-US/firefox/addon/sessify",
         icon: <SiFirefoxbrowser className="size-5" />,
-        mobileSupport: true,
     },
-];
+] ;

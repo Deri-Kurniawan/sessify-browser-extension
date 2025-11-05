@@ -68,7 +68,7 @@ const HeroSection = ({
 					{/* CTA Buttons */}
 					<div className="flex flex-wrap justify-center gap-4">
 						{supportedBrowser &&
-						(isDesktop || supportedBrowser.mobileSupport) ? (
+						(isDesktop || supportedBrowser?.mobileSupport) ? (
 							<Button
 								size="lg"
 								className="bg-primary hover:bg-primary/90 text-primary-foreground capitalize"
