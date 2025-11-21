@@ -15,6 +15,10 @@ on:
           - patch
           - minor
           - major
+      skipWebstorePublish:
+        default: false
+        type: boolean
+        description: Skip webstore publication (only create release)
 
 permissions:
   contents: write
@@ -109,6 +113,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
 
       - name: Submit
+        if: ${{ !inputs.dryRun && !inputs.skipWebstorePublish }}
         run: |
           bun wxt submit \
             --chrome-zip dist/*-chrome.zip \
