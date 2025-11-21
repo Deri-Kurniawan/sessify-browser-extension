@@ -6,6 +6,15 @@ on:
         default: false
         type: boolean
         description: Skip submission and perform a dry run
+      bumpType:
+        default: 'auto'
+        type: choice
+        description: Version bump type
+        options:
+          - auto
+          - patch
+          - minor
+          - major
 
 permissions:
   contents: write
@@ -41,15 +50,43 @@ jobs:
       - name: Bump Version
         id: version
         run: |
-          bunx changelogen@latest --bump
+          BUMP_TYPE="${{ inputs.bumpType || 'auto' }}"
+          if [ "$BUMP_TYPE" = "auto" ]; then
+            bunx changelogen@latest --bump
+          elif [ "$BUMP_TYPE" = "patch" ]; then
+            bunx changelogen@latest --patch
+          elif [ "$BUMP_TYPE" = "minor" ]; then
+            bunx changelogen@latest --minor
+          elif [ "$BUMP_TYPE" = "major" ]; then
+            bunx changelogen@latest --major
+          fi
           NEW_VERSION=$(bun --print 'require("./package.json").version')
           bun --eval "const fs = require('fs'); const pkg = JSON.parse(fs.readFileSync('./package.json', 'utf8')); pkg.version_name = pkg.version; fs.writeFileSync('./package.json', JSON.stringify(pkg, null, 2) + '\n');"
           echo "newVersion=$NEW_VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Commit and Push Version
+        if: ${{ !inputs.dryRun }}
+        run: |
+          git add package.json CHANGELOG.md
+          git commit -m "chore(release): v$NEW_VERSION" || echo "No changes to commit"
+          if git rev-parse "v$NEW_VERSION" >/dev/null 2>&1; then
+            echo "Tag v$NEW_VERSION already exists, deleting it first"
+            git tag -d "v$NEW_VERSION"
+            git push --delete origin "v$NEW_VERSION" || true
+          fi
+          git tag "v$NEW_VERSION"
+          git push
+          git push --tags
+        env:
+          NEW_VERSION: ${{ steps.version.outputs.newVersion }}
 
       - name: Build and Zip
         run: |
           bun run zip
           bun run zip:firefox
+
+      - name: List dist contents (debug)
+        run: ls -lah dist/
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
@@ -57,17 +94,6 @@ jobs:
           path: dist/*.zip
           if-no-files-found: error
           include-hidden-files: true
-
-      - name: Commit and Push
-        if: ${{ !inputs.dryRun }}
-        run: |
-          git add package.json CHANGELOG.md
-          git commit -am "chore(release): v$NEW_VERSION"
-          git tag v$NEW_VERSION
-          git push
-          git push --tags
-        env:
-          NEW_VERSION: ${{ steps.version.outputs.newVersion }}
 
       - name: Release
         if: ${{ !inputs.dryRun }}
