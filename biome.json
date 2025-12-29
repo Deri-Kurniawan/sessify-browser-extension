@@ -1,28 +1,30 @@
 {
-  "$schema": "https://biomejs.dev/schemas/2.2.2/schema.json",
-  "vcs": {
-    "enabled": false,
-    "clientKind": "git",
-    "useIgnoreFile": false
-  },
+  "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
   "files": {
-    "ignoreUnknown": false
+    "ignoreUnknown": false,
+    "includes": [
+      "!**/.next",
+      "!**/dist",
+      "!**/.turbo",
+      "!**/dev-dist",
+      "!**/.zed",
+      "!**/.vscode",
+      "!**/routeTree.gen.ts",
+      "!**/src-tauri",
+      "!**/.nuxt",
+      "!bts.jsonc",
+      "!**/.expo",
+      "!**/.wrangler",
+      "!**/.alchemy",
+      "!**/.svelte-kit",
+      "!**/wrangler.jsonc",
+      "!**/.source",
+      "!**/bun.lock"
+    ]
   },
-  "formatter": {
-    "enabled": true,
-    "indentStyle": "tab"
-  },
-  "linter": {
-    "enabled": true,
-    "rules": {
-      "recommended": true,
-      "suspicious": {
-        "noUnknownAtRules": "off",
-        "noExplicitAny": "off"
-      },
-      "style": {
-        "noNonNullAssertion": "off"
-      }
+  "css": {
+    "parser": {
+      "tailwindDirectives": true
     }
   },
   "javascript": {
@@ -30,12 +32,50 @@
       "quoteStyle": "double"
     }
   },
-  "assist": {
-    "enabled": true,
-    "actions": {
-      "source": {
-        "organizeImports": "on"
+  "json": {
+    "parser": {
+      "allowComments": true
+    }
+  },
+  "linter": {
+    "rules": {
+      "style": {
+        "useNamingConvention": "off",
+        "noNestedTernary": "off",
+        "useFilenamingConvention": "off",
+        "noDescendingSpecificity": "off",
+        "useConsistentTypeDefinitions": {
+          "level": "error",
+          "options": {
+            "style": "type"
+          }
+        },
+        "noParameterProperties": "off",
+        "useConsistentMemberAccessibility": "off"
+      },
+      "suspicious": {
+        "noConsole": "off",
+        "noDuplicateProperties": "off",
+        "noUnknownAtRules": "off",
+        "noExplicitAny": "off"
+      },
+      "complexity": {
+        "noVoid": "off",
+        "noImportantStyles": "off"
+      },
+      "correctness": {
+        "noUndeclaredVariables": "off"
+      },
+      "performance": {
+        "noImgElement": "off"
+      },
+      "a11y": {
+        "noNoninteractiveElementInteractions": "off",
+        "noNoninteractiveElementToInteractiveRole": "off",
+        "noInteractiveElementToNoninteractiveRole": "off",
+        "noStaticElementInteractions": "off"
       }
     }
-  }
+  },
+  "extends": ["ultracite/core", "ultracite/next", "ultracite/react"]
 }

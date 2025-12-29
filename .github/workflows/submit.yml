@@ -48,13 +48,14 @@ jobs:
 
       - name: Build and Zip
         run: |
+          cd apps/ext
           bun run zip
           bun run zip:firefox
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
-          path: dist/*.zip
+          path: apps/ext/dist/*.zip
           if-no-files-found: error
           include-hidden-files: true
 
@@ -78,12 +79,13 @@ jobs:
       # Don't upload sources zip - it can contain .env files, which may include secrets
       - name: Upload ZIPs
         if: ${{ !inputs.dryRun }}
-        run: gh release upload v${{ steps.version.outputs.newVersion }} dist/*-chrome.zip dist/*-firefox.zip
+        run: gh release upload v${{ steps.version.outputs.newVersion }} apps/ext/dist/*-chrome.zip apps/ext/dist/*-firefox.zip
         env:
           GH_TOKEN: ${{ github.token }}
 
       - name: Submit
         run: |
+          cd apps/ext
           bun wxt submit \
             --chrome-zip dist/*-chrome.zip \
             --firefox-zip dist/*-firefox.zip --firefox-sources-zip dist/*-sources.zip
