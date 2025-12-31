@@ -1,5 +1,6 @@
 {
   "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+  "extends": ["ultracite/core", "ultracite/next", "ultracite/react"],
   "files": {
     "ignoreUnknown": false,
     "includes": [
@@ -9,6 +10,7 @@
       "!**/dev-dist",
       "!**/.zed",
       "!**/.vscode",
+      "!**/.github",
       "!**/routeTree.gen.ts",
       "!**/src-tauri",
       "!**/.nuxt",
@@ -19,8 +21,13 @@
       "!**/.svelte-kit",
       "!**/wrangler.jsonc",
       "!**/.source",
-      "!**/bun.lock"
+      "!**/bun.lock",
+      "!**/.wxt"
     ]
+  },
+  "formatter": {
+    "indentStyle": "space",
+    "indentWidth": 2
   },
   "css": {
     "parser": {
@@ -29,7 +36,8 @@
   },
   "javascript": {
     "formatter": {
-      "quoteStyle": "double"
+      "quoteStyle": "double",
+      "trailingCommas": "all"
     }
   },
   "json": {
@@ -44,14 +52,11 @@
         "noNestedTernary": "off",
         "useFilenamingConvention": "off",
         "noDescendingSpecificity": "off",
-        "useConsistentTypeDefinitions": {
-          "level": "error",
-          "options": {
-            "style": "type"
-          }
-        },
+        "useConsistentTypeDefinitions": "off",
         "noParameterProperties": "off",
-        "useConsistentMemberAccessibility": "off"
+        "useConsistentMemberAccessibility": "off",
+        "noNonNullAssertion": "off",
+        "useBlockStatements": "off"
       },
       "suspicious": {
         "noConsole": "off",
@@ -61,13 +66,15 @@
       },
       "complexity": {
         "noVoid": "off",
-        "noImportantStyles": "off"
+        "noImportantStyles": "off",
+        "noForEach": "off"
       },
       "correctness": {
         "noUndeclaredVariables": "off"
       },
       "performance": {
-        "noImgElement": "off"
+        "noImgElement": "off",
+        "noBarrelFile": "off"
       },
       "a11y": {
         "noNoninteractiveElementInteractions": "off",
@@ -76,6 +83,5 @@
         "noStaticElementInteractions": "off"
       }
     }
-  },
-  "extends": ["ultracite/core", "ultracite/next", "ultracite/react"]
+  }
 }
