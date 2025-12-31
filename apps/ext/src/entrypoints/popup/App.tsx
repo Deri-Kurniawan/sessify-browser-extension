@@ -7,32 +7,32 @@ import SessionPage from "@/features/session/pages/SessionPage";
 import SettingsPage from "@/features/settings/pages/SettingsPage";
 
 type AppProps = {
-	launchType?: ComponentProps<typeof RootLayout>["launchType"];
+  launchType?: ComponentProps<typeof RootLayout>["launchType"];
 };
 
 const App: FC<AppProps> = ({ launchType = "popup" }) => {
-	const router = createHashRouter([
-		{
-			Component: (props) => <RootLayout {...props} launchType={launchType} />,
-			children: [
-				{
-					path: "/",
-					Component: SessionPage,
-					index: true,
-				},
-				{
-					path: "/settings",
-					Component: SettingsPage,
-				},
-			],
-		},
-	]);
+  const router = createHashRouter([
+    {
+      Component: (props) => <RootLayout {...props} launchType={launchType} />,
+      children: [
+        {
+          path: "/",
+          Component: SessionPage,
+          index: true,
+        },
+        {
+          path: "/settings",
+          Component: SettingsPage,
+        },
+      ],
+    },
+  ]);
 
-	return (
-		<SessionProvider watchTabChange={launchType === "sidepanel"}>
-			<RouterProvider router={router} />
-		</SessionProvider>
-	);
+  return (
+    <SessionProvider watchTabChange={launchType === "sidepanel"}>
+      <RouterProvider router={router} />
+    </SessionProvider>
+  );
 };
 
 export default App;
