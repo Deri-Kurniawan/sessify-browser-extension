@@ -95,6 +95,29 @@ bun run format
 
 # Type checking
 bun run check-types
+
+# Validate everything (lint + types + build)
+bun run validate
+```
+
+### Quality Assurance
+
+```bash
+# Security audit
+bun run audit
+
+# Fix security issues (if any)
+bun run audit:fix
+```
+
+### Maintenance
+
+```bash
+# Clean build artifacts
+bun run clean
+
+# Clean everything including node_modules
+bun run clean:all
 ```
 
 ---

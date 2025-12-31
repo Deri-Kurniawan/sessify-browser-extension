@@ -23,7 +23,7 @@ const HeroSection = ({
   className?: string;
 }) => {
   const supportedBrowser = browserSupport.find(
-    (b) => b.name === userBrowserType
+    (b) => b.name === userBrowserType,
   );
 
   return (

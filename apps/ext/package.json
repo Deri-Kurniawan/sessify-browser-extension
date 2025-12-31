@@ -29,7 +29,8 @@
     "lint": "biome check ./src",
     "lint:write": "biome check --write ./src",
     "format": "biome format ./src",
-    "format:write": "biome format --write ./src"
+    "format:write": "biome format --write ./src",
+    "clean": "rm -rf dist dev-dist .wxt"
   },
   "dependencies": {
     "@hookform/resolvers": "catalog:",

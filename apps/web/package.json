@@ -21,7 +21,8 @@
     "lint:write": "biome check --write",
     "format": "biome format",
     "format:write": "biome format --write",
-    "check-types": "tsc --noEmit"
+    "check-types": "tsc --noEmit",
+    "clean": "rm -rf .next out"
   },
   "dependencies": {
     "@sessify/ui": "workspace:*",

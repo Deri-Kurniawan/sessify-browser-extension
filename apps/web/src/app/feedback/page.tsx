@@ -75,7 +75,7 @@ export default async function FeedbackPage({
         <header className="mb-10">
           <h1
             className={cn(
-              "text-pretty font-semibold text-4xl tracking-tight md:text-5xl"
+              "text-pretty font-semibold text-4xl tracking-tight md:text-5xl",
             )}
           >
             {isUninstall ? "Sorry to see you go :'(" : "Share your feedback"}
