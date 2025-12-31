@@ -41,6 +41,7 @@ jobs:
       - name: Bump Version
         id: version
         run: |
+          cd apps/ext
           bunx changelogen@latest --bump
           NEW_VERSION=$(bun --print 'require("./package.json").version')
           bun --eval "const fs = require('fs'); const pkg = JSON.parse(fs.readFileSync('./package.json', 'utf8')); pkg.version_name = pkg.version; fs.writeFileSync('./package.json', JSON.stringify(pkg, null, 2) + '\n');"
@@ -62,7 +63,7 @@ jobs:
       - name: Commit and Push
         if: ${{ !inputs.dryRun }}
         run: |
-          git add package.json CHANGELOG.md
+          git add apps/ext/package.json apps/ext/CHANGELOG.md
           git commit -am "chore(release): v$NEW_VERSION"
           git tag v$NEW_VERSION
           git push
@@ -72,7 +73,9 @@ jobs:
 
       - name: Release
         if: ${{ !inputs.dryRun }}
-        run: bunx changelogen@latest gh release ${{ steps.version.outputs.newVersion }} --token ${{ github.token }}
+        run: |
+          cd apps/ext
+          bunx changelogen@latest gh release ${{ steps.version.outputs.newVersion }} --token ${{ github.token }}
         env:
           GH_TOKEN: ${{ github.token }}
 
