@@ -2,59 +2,75 @@
 
 import { Button } from "@sessify/ui/components/button";
 import { MessageCircleMoreIcon, StarIcon } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { env } from "@/env";
 
 export default function Navbar() {
+  const pathname = usePathname();
+
   return (
-    <header className="sticky top-0 z-40 w-full border-b bg-background/80 backdrop-blur">
-      <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4 md:px-6">
-        {/* Left: Brand */}
+    <nav className="fixed top-0 z-50 w-full border-b bg-background/95 backdrop-blur-md supports-[backdrop-filter]:bg-background/80">
+      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 md:px-6">
         <Link
-          aria-label="Home"
-          className="flex h-full items-center gap-2"
+          className="group flex items-center gap-3 transition-opacity hover:opacity-80"
           href="/"
         >
-          <Image
-            alt=""
-            className="size-5"
-            height={20}
-            src="/icon.png"
-            width={20}
-          />
-          <span className="font-semibold text-sm tracking-tight">Sessify</span>
+          <span className="font-bold text-xl tracking-tight">Sessify</span>
         </Link>
 
-        {/* Right: Actions */}
-        <div className="flex items-center gap-4">
-          <Button asChild size="sm" variant="ghost">
-            <Link href="/feedback">
-              <MessageCircleMoreIcon />
-              <span className="hidden md:inline-flex">Give </span>Feedback
+        <div className="hidden items-center gap-1 md:flex">
+          <Button
+            asChild
+            size="sm"
+            variant={pathname === "/privacy" ? "secondary" : "ghost"}
+          >
+            <Link href="/privacy">Privacy</Link>
+          </Button>
+          <Button
+            asChild
+            size="sm"
+            variant={pathname === "/feedback" ? "secondary" : "ghost"}
+          >
+            <Link href="/feedback">Feedback</Link>
+          </Button>
+        </div>
+
+        <div className="flex items-center gap-3">
+          <Button
+            asChild
+            className="md:hidden"
+            size="icon"
+            variant={pathname === "/feedback" ? "secondary" : "ghost"}
+          >
+            <Link aria-label="Give Feedback" href="/feedback">
+              <MessageCircleMoreIcon className="size-5 shrink-0" />
             </Link>
           </Button>
+
           <Button asChild className="hidden md:inline-flex" size="sm">
             <a
               href={env.NEXT_PUBLIC_GITHUB_URL}
-              rel="noreferrer"
+              rel="noopener noreferrer"
               target="_blank"
             >
-              <StarIcon />
+              <StarIcon className="size-4 shrink-0" />
               Star on GitHub
             </a>
           </Button>
+
           <Button asChild className="md:hidden" size="icon">
             <a
+              aria-label="Star on GitHub"
               href={env.NEXT_PUBLIC_GITHUB_URL}
-              rel="noreferrer"
+              rel="noopener noreferrer"
               target="_blank"
             >
-              <StarIcon />
+              <StarIcon className="size-5 shrink-0" />
             </a>
           </Button>
         </div>
       </div>
-    </header>
+    </nav>
   );
 }

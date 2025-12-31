@@ -1,11 +1,15 @@
 import type { Metadata } from "next";
+import { headers } from "next/headers";
 import pkg from "@/../package.json";
-import HeroSection from "@/components/HeroSection";
+import FeaturesSection from "@/app/_components/features-section";
+import HeroSection from "@/app/_components/hero-section";
+import OpenSourceCTA from "@/app/_components/open-source-cta";
+import PrivacySection from "@/app/_components/privacy-section";
 import { env } from "@/env";
 
 const title = "Sessify - Smart Browser Extension for Session Management";
 const description =
-  "Boost your productivity with Sessify, the ultimate browser extension for managing tabs and browsing sessions. Save, organize, restore, and synchronize your browser sessions across devices. Perfect for developers, researchers, and power users.";
+  "Boost your productivity with Sessify, the ultimate browser extension for managing tabs and browsing sessions. Save, organize, restore, and synchronize your browser sessions across different contexts. Perfect for developers, researchers, and power users.";
 
 export const metadata: Metadata = {
   title,
@@ -67,26 +71,22 @@ export const metadata: Metadata = {
   classification: "Browser Extension",
 };
 
-type HomePageProps = {
-  searchParams?: Promise<{
-    browser?: string;
-    device?: "mobile" | "desktop";
-  }>;
-};
+export default async function HomePage() {
+  const headersList = await headers();
+  const userBrowserType = headersList.get("x-browser") || "unknown";
+  const device = headersList.get("x-device") || "desktop";
+  const isDesktop = device === "desktop";
 
-export default async function HomePage({ searchParams }: HomePageProps) {
-  const params = await searchParams;
-  const userBrowserType = params?.browser;
-  const isDesktop = params?.device === "desktop";
   return (
-    <div className="container mx-auto w-full px-4">
-      <div className="my-20">
-        <HeroSection
-          className="mx-auto max-w-6xl"
-          isDesktop={isDesktop}
-          userBrowserType={userBrowserType}
-        />
-      </div>
-    </div>
+    <main>
+      <HeroSection
+        className="mx-auto max-w-6xl px-4"
+        isDesktop={isDesktop}
+        userBrowserType={userBrowserType}
+      />
+      <FeaturesSection />
+      <PrivacySection />
+      <OpenSourceCTA />
+    </main>
   );
 }

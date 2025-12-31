@@ -1,7 +1,7 @@
 import { FaChrome, FaEdge, FaOpera } from "react-icons/fa";
 import { SiBrave, SiFirefoxbrowser, SiVivaldi } from "react-icons/si";
 
-type BrowserSupport = {
+export type BrowserSupport = {
   name: string;
   storeUrl: string;
   icon: React.ReactNode;

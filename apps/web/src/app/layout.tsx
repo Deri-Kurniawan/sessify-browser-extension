@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import { Footer } from "@/components/Footer";
-import Navbar from "@/components/Navbar";
+import { Footer } from "@/components/footer";
+import Navbar from "@/components/navbar";
 import "@sessify/ui/styles/index";
 
 const geistSans = Geist({
@@ -33,8 +33,8 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Navbar />
-        {children}
-        <Footer className="mx-auto max-w-6xl" />
+        <div className="container mx-auto w-full pt-16">{children}</div>
+        <Footer />
       </body>
     </html>
   );
