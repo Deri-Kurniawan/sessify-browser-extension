@@ -14,8 +14,8 @@ export function Footer({ className = "" }: FooterProps) {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className={cn("border-t", className)}>
-      <div className="mx-auto max-w-7xl px-4 py-12 md:px-6 md:py-16">
+    <footer className={cn(className)}>
+      <div className="mx-auto max-w-7xl border-t px-4 py-12 md:px-6 md:py-16">
         <div className="grid gap-8 md:grid-cols-3">
           <div className="space-y-4">
             <div className="flex items-center gap-2">
