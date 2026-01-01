@@ -41,6 +41,7 @@ jobs:
       - name: Bump Version
         id: version
         run: |
+          cd apps/ext
           bunx changelogen@latest --bump
           NEW_VERSION=$(bun --print 'require("./package.json").version')
           bun --eval "const fs = require('fs'); const pkg = JSON.parse(fs.readFileSync('./package.json', 'utf8')); pkg.version_name = pkg.version; fs.writeFileSync('./package.json', JSON.stringify(pkg, null, 2) + '\n');"
@@ -48,20 +49,21 @@ jobs:
 
       - name: Build and Zip
         run: |
+          cd apps/ext
           bun run zip
           bun run zip:firefox
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
-          path: dist/*.zip
+          path: apps/ext/dist/*.zip
           if-no-files-found: error
           include-hidden-files: true
 
       - name: Commit and Push
         if: ${{ !inputs.dryRun }}
         run: |
-          git add package.json CHANGELOG.md
+          git add apps/ext/package.json apps/ext/CHANGELOG.md
           git commit -am "chore(release): v$NEW_VERSION"
           git tag v$NEW_VERSION
           git push
@@ -71,19 +73,22 @@ jobs:
 
       - name: Release
         if: ${{ !inputs.dryRun }}
-        run: bunx changelogen@latest gh release ${{ steps.version.outputs.newVersion }} --token ${{ github.token }}
+        run: |
+          cd apps/ext
+          bunx changelogen@latest gh release ${{ steps.version.outputs.newVersion }} --token ${{ github.token }}
         env:
           GH_TOKEN: ${{ github.token }}
 
       # Don't upload sources zip - it can contain .env files, which may include secrets
       - name: Upload ZIPs
         if: ${{ !inputs.dryRun }}
-        run: gh release upload v${{ steps.version.outputs.newVersion }} dist/*-chrome.zip dist/*-firefox.zip
+        run: gh release upload v${{ steps.version.outputs.newVersion }} apps/ext/dist/*-chrome.zip apps/ext/dist/*-firefox.zip
         env:
           GH_TOKEN: ${{ github.token }}
 
       - name: Submit
         run: |
+          cd apps/ext
           bun wxt submit \
             --chrome-zip dist/*-chrome.zip \
             --firefox-zip dist/*-firefox.zip --firefox-sources-zip dist/*-sources.zip

@@ -1,0 +1,48 @@
+{
+  "name": "web",
+  "version": "0.1.0",
+  "private": true,
+  "author": {
+    "name": "Deri Kurniawan",
+    "email": "hi@derikn.com",
+    "url": "https://www.derikn.com"
+  },
+  "homepage": "https://sessify.derikn.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Deri-Kurniawan/sessify-browser-extension.git"
+  },
+  "license": "MIT",
+  "scripts": {
+    "dev": "next dev -p 3001",
+    "build": "next build",
+    "start": "next start -p 3001",
+    "lint": "biome check",
+    "lint:write": "biome check --write",
+    "format": "biome format",
+    "format:write": "biome format --write",
+    "check-types": "tsc --noEmit",
+    "clean": "rm -rf .next out"
+  },
+  "dependencies": {
+    "@sessify/ui": "workspace:*",
+    "@t3-oss/env-nextjs": "catalog:",
+    "class-variance-authority": "catalog:",
+    "lucide-react": "catalog:",
+    "next": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "react-icons": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "catalog:",
+    "@tailwindcss/postcss": "catalog:",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "tailwindcss": "catalog:",
+    "tw-animate-css": "catalog:",
+    "typescript": "catalog:"
+  }
+}

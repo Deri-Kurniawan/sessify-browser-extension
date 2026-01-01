@@ -1,0 +1,9 @@
+export { BrowserPermissionsSection } from "./browser-permissions-section";
+export { ContactCard } from "./contact-card";
+export { DataCollectionSection } from "./data-collection-section";
+export { DataProtectionSection } from "./data-protection-section";
+export { DataRetentionCard } from "./data-retention-card";
+export { DataWeDontCollectSection } from "./data-we-dont-collect-section";
+export { PolicyUpdatesCard } from "./policy-updates-card";
+export { PrivacyHeader } from "./privacy-header";
+export { PrivacyHighlights } from "./privacy-highlights";

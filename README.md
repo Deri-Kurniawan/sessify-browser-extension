@@ -1,6 +1,6 @@
 # Sessify
 
-Browser extension for managing and switching between multiple browser sessions efficiently.
+A comprehensive platform for managing and switching between multiple browser sessions efficiently, featuring a browser extension and web application.
 
 ---
 
@@ -10,10 +10,35 @@ Browser extension for managing and switching between multiple browser sessions e
 - 🐛 Dynamic session by current active tab
 - ⚡ Built with [React 19](https://react.dev/) + [TypeScript](https://www.typescriptlang.org/) and [Tailwind CSS](https://tailwindcss.com/)
 - 🧩 Powered by [WXT](http://wxt.dev/) for smooth Cross browser extension development
+- 🏗️ Monorepo architecture using [Turborepo](https://turbo.build/) for efficient development and building
+
+---
+
+## 📁 Monorepo Structure
+
+This project is organized as a monorepo with the following structure:
+
+```
+├── apps/
+│   ├── ext/          # Browser extension (WXT-based)
+│   └── web/          # Web application (Next.js)
+├── packages/
+│   ├── ui/           # Shared UI components library
+│   ├── tailwind-config/  # Shared Tailwind CSS configuration
+│   └── typescript-config/ # Shared TypeScript configuration
+└── turbo.json        # Turborepo configuration
+```
 
 ---
 
 ## 🛠️ Development
+
+### Prerequisites
+
+- [Bun](https://bun.sh/) (recommended) or Node.js
+- Git
+
+### Setup
 
 Clone the repository and install dependencies:
 
@@ -23,40 +48,103 @@ cd sessify-browser-extension
 bun install
 ```
 
-Run the development server:
+### Development Commands
+
+Run development servers for all apps:
 
 ```bash
-bun dev
+bun run dev
 ```
 
-Build the extension for chrome & firefox:
+Run development for specific apps:
 
 ```bash
-# chrome
+# Browser extension only
+bun run dev --filter=ext
+
+# Web application only
+bun run dev --filter=web
+```
+
+### Building
+
+Build all applications:
+
+```bash
 bun run build
-
-# firefox
-bun run build:firefox
 ```
 
-Load the extension manually in your chrome browser:
+Build specific applications:
 
-1. Open Chrome and go to:
-   ```
-   chrome://extensions/
-   ```
-2. Enable "Developer mode"
-3. Click "Load unpacked" and select the `dist/chrome-mv3/` folder.
+```bash
+# Browser extension
+bun run build --filter=ext
+
+# Web application
+bun run build --filter=web
+```
+
+### Linting and Formatting
+
+```bash
+# Lint all code
+bun run lint
+
+# Format all code
+bun run format
+
+# Type checking
+bun run check-types
+
+# Validate everything (lint + types + build)
+bun run validate
+```
+
+### Quality Assurance
+
+```bash
+# Security audit
+bun run audit
+
+# Fix security issues (if any)
+bun run audit:fix
+```
+
+### Maintenance
+
+```bash
+# Clean build artifacts
+bun run clean
+
+# Clean everything including node_modules
+bun run clean:all
+```
+
+---
+
+## 🔌 Browser Extension Setup
+
+After building the extension, load it manually in your browser:
+
+### Chrome
+
+1. Open Chrome and navigate to `chrome://extensions/`
+2. Enable "Developer mode" in the top right
+3. Click "Load unpacked" and select the `apps/ext/dist/chrome-mv3/` folder
 4. Enjoy managing your sessions!
 
-or for firefox browser:
+### Firefox
 
-1. Open Firefox and go to:
-   ```
-   about:debugging#/runtime/this-firefox
-   ```
-2. Click "Load Temporary Add-on" and select the `dist/firefox-mv2/manifest.json` file.
-3. Enjoy managing your sessions!
+1. Open Firefox and navigate to `about:debugging#/runtime/this-firefox`
+2. Click "Load Temporary Add-on"
+3. Select the `apps/ext/dist/firefox-mv2/manifest.json` file
+4. Enjoy managing your sessions!
+
+---
+
+## 🌐 Web Application
+
+The web application provides additional features and management tools. After running `bun run dev --filter=web`, visit `http://localhost:3000` to access it.
 
 ---
 

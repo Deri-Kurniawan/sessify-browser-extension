@@ -1,0 +1,3 @@
+body[data-scroll="locked"] {
+  @apply overflow-hidden;
+}
