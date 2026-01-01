@@ -36,9 +36,9 @@
     "@biomejs/biome": "2.3.10",
     "husky": "^9.1.7",
     "lint-staged": "^16.2.7",
-    "tsdown": "^0.18.3",
+    "tsdown": "^0.18.4",
     "turbo": "^2.7.2",
-    "ultracite": "6.5.0"
+    "ultracite": "6.5.1"
   },
   "workspaces": {
     "packages": [
@@ -51,7 +51,7 @@
       "@t3-oss/env-nextjs": "^0.13.10",
       "@tailwindcss/postcss": "^4.1.18",
       "@types/node": "^25.0.3",
-      "@types/react": "^19.2.7",
+      "@types/react": "^19.2.3",
       "@types/react-dom": "^19.2.3",
       "class-variance-authority": "^0.7.1",
       "clsx": "^2.1.1",
@@ -62,12 +62,12 @@
       "lucide-react": "^0.562.0",
       "moment": "^2.30.1",
       "motion": "^12.23.26",
-      "next": "15.5.7",
+      "next": "^16.1.1",
       "next-themes": "^0.4.6",
       "nuqs": "^2.8.6",
       "postcss": "^8.5.6",
-      "react": "19.2.3",
-      "react-dom": "19.2.3",
+      "react": "^19.2.3",
+      "react-dom": "^19.2.3",
       "react-hook-form": "^7.69.0",
       "react-icons": "^5.5.0",
       "sonner": "^2.0.7",
@@ -77,7 +77,7 @@
       "tsdown": "^0.18.3",
       "tw-animate-css": "^1.4.0",
       "typescript": "^5",
-      "zod": "^4.2.1"
+      "zod": "^4.3.4"
     }
   },
   "engines": {

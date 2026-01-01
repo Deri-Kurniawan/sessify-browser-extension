@@ -15,7 +15,7 @@ const mobileRegex =
   /mobile|android|iphone|ipod|blackberry|windows phone|kindle|silk|playbook|bb10/i;
 const tabletRegex = /ipad|tablet|playbook|silk|kindle/i;
 
-export default function middleware(request: NextRequest) {
+export default function proxy(request: NextRequest) {
   const userAgent = request.headers.get("user-agent") || "";
 
   let browser = "unknown";
