@@ -1,6 +1,8 @@
 import { Button } from "@sessify/ui/components/button";
 import { cn } from "@sessify/ui/lib/utils";
 import { ArrowRightIcon, GlobeIcon, PlayIcon } from "lucide-react";
+import Image from "next/image";
+import digitalIdentityIntegration from "@/assets/images/digital-identity-integration.webp";
 import { AnnouncementBanner } from "@/components/announcement-banner";
 import { browserSupport } from "@/configs/browser-support";
 
@@ -21,8 +23,6 @@ const HeroSection = ({
     <section
       className={cn("relative overflow-hidden py-24 lg:py-32", className)}
     >
-      <div className="absolute inset-0 bg-gradient-to-br from-background via-background to-muted/20" />
-
       <AnnouncementBanner />
 
       <div className="relative flex flex-col items-center gap-12">
@@ -81,6 +81,17 @@ const HeroSection = ({
             </Button>
           </div>
         </div>
+      </div>
+      <div className="absolute inset-0 -z-1">
+        <Image
+          alt="Hero Background"
+          className="size-full select-none rounded-lg object-cover object-center opacity-10"
+          height={1080}
+          priority
+          quality={50}
+          src={digitalIdentityIntegration}
+          width={1920}
+        />
       </div>
     </section>
   );
