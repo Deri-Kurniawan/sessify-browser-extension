@@ -1,5 +1,5 @@
-import { SessifyExtension } from "@/background/SessifyExtension";
+import { bootstrapBackground } from "@/app/background";
 
 export default defineBackground(() => {
-  SessifyExtension.prototype.init();
+  bootstrapBackground();
 });

@@ -1,11 +1,3 @@
-import React from "react";
-import ReactDOM from "react-dom/client";
-import App from "./App.tsx";
-import "@sessify/ui/styles/index";
-import "@/styles/globals.css";
+import { mountExtensionApp } from "@/app/entrypoints";
 
-ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-);
+mountExtensionApp("root", "sidepanel");

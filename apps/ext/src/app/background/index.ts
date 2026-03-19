@@ -1,0 +1,1 @@
+export { bootstrapBackground } from "./bootstrap";
