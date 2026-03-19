@@ -72,7 +72,7 @@ src/
 - `shared/lib/browser`
   Thin wrappers around browser tabs, cookies, scripting, and badge APIs.
 - `shared/lib/storage`
-  Local storage wrappers for extension persistence.
+  Local storage wrappers and typed repositories for extension persistence.
 - `shared/ui`
   Generic extension UI primitives like `TopBar`, `ContentWrapper`, and `Placeholder`.
 
@@ -83,7 +83,9 @@ Nothing in `shared` should depend on `pages` or `widgets`.
 `entities/session` is the source of truth for the session domain:
 
 - `model/types.ts`
-  Defines `Session`, `SessionDomain`, and `SessionState`.
+  Defines inferred `Session`, `SessionDomain`, and `SessionState` types.
+- `model/schema.ts`
+  Defines runtime Zod schemas for persisted session data.
 - `lib/create-session.ts`
   Creates a normalized `Session` from the active tab and captured storage.
 - `lib/filter-sessions-for-url.ts`
@@ -150,6 +152,39 @@ These map to the existing runtime string values:
 - `GET_ACTIVE_SESSION`
 
 UI code should use `sessionBackgroundClient` instead of constructing raw messages.
+
+## Storage Conventions
+
+Persisted extension state now follows one pattern:
+
+- schema
+- inferred type
+- default value
+- repository
+- migration path
+
+Current persisted domains:
+
+- `settings`
+  - schema: `settingsSchema`
+  - default: `defaultSettings`
+  - repository: `settingsRepository`
+- `sessions`
+  - schema: `sessionSchema` and `sessionListSchema`
+  - repository: `sessionRepository`
+- `activeSessionId`
+  - schema: `activeSessionIdSchema`
+  - repository: `activeSessionRepository`
+  - empty state: `null`
+
+Rules:
+
+- Do not read raw storage directly from feature code.
+- Parse persisted values on read, not only on write.
+- Keep defaults next to schemas.
+- Use repositories as the only read/write boundary for persisted state.
+- Prefer `null` over empty-string sentinels for missing values.
+- Bump storage version and add migration logic when persisted shapes change.
 
 ## Naming Rules
 

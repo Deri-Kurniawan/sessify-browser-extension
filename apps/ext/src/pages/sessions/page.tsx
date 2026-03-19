@@ -37,7 +37,7 @@ import {
 import SessionDetailDialog from "./session-detail-dialog";
 
 type SessionCardProps = {
-  activeSessionId: string;
+  activeSessionId: string | null;
   session: Session;
   onDelete: (sessionId: string) => void;
   onActivate: (sessionId: string) => void;

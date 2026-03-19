@@ -34,7 +34,8 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
-import type { Browser } from "#imports";
+
+import type { Session } from "@/entities/session";
 import { useSessionManagement } from "@/features/session-management";
 
 type SessionDetailDialogProps = {
@@ -95,7 +96,7 @@ const SessionDetailDialog: FC<SessionDetailDialogProps> = ({
   };
 
   const formatStorageData = (
-    data: Record<string, string> | Browser.cookies.Cookie[],
+    data: Record<string, string> | Session["state"]["cookies"],
   ) => {
     const entries = Object.entries(data);
     if (entries.length === 0) {

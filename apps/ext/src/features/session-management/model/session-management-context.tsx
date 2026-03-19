@@ -13,11 +13,11 @@ import {
   type MessageResponse,
   sessionBackgroundClient,
 } from "@/shared/api/background-client";
-import { extensionConfig } from "@/shared/config";
+import { storageKeys } from "@/shared/config";
 
 type SessionManagementContextValue = {
   sessions: Session[];
-  activeSessionId: string;
+  activeSessionId: string | null;
   error: string | null;
   listSessions: () => Promise<MessageResponse<Session[]>>;
   readActiveSessionId: () => Promise<MessageResponse<string | null>>;
@@ -54,7 +54,7 @@ export const SessionManagementProvider: FC<{
   children: ReactNode;
 }> = ({ children, watchTabChange = true }) => {
   const [sessions, setSessions] = useState<Session[]>([]);
-  const [activeSessionId, setActiveSessionId] = useState("");
+  const [activeSessionId, setActiveSessionId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const listSessions = useCallback(async () => {
@@ -77,7 +77,7 @@ export const SessionManagementProvider: FC<{
     const response = await sessionBackgroundClient.readActiveSessionId();
 
     if (response.success) {
-      setActiveSessionId(response.data || "");
+      setActiveSessionId(response.data ?? null);
       return response;
     }
 
@@ -93,7 +93,7 @@ export const SessionManagementProvider: FC<{
     const response = await sessionBackgroundClient.createEmptySession();
 
     if (response.success) {
-      setActiveSessionId("");
+      setActiveSessionId(null);
       return response;
     }
 
@@ -163,6 +163,9 @@ export const SessionManagementProvider: FC<{
     if (response.success) {
       setSessions((previousSessions) =>
         previousSessions.filter((session) => session.id !== sessionId),
+      );
+      setActiveSessionId((previousSessionId) =>
+        previousSessionId === sessionId ? null : previousSessionId,
       );
       return response;
     }
@@ -240,8 +243,8 @@ export const SessionManagementProvider: FC<{
       }
 
       if (
-        changes[extensionConfig.keys.sessions] ||
-        changes[extensionConfig.keys.activeSessionId]
+        changes[storageKeys.sessions] ||
+        changes[storageKeys.activeSessionId]
       ) {
         void listSessions().catch((currentError: Error) =>
           setError(String(currentError?.message || currentError)),

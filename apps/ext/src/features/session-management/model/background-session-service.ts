@@ -8,17 +8,19 @@ import {
   sortSessionsByRelevance,
 } from "@/entities/session";
 import type { MessageResponse } from "@/shared/api/background-client";
-import { extensionConfig } from "@/shared/config";
+import { defaultSettings, storageKeys, storageVersion } from "@/shared/config";
 import {
+  activeSessionRepository,
   applyStorageToCurrentTab,
   browserActionApi,
   clearStorageForCurrentTab,
   getCurrentActiveTab,
   getStorageFromCurrentTab,
-  getStorageValue,
+  migrateStorageState,
   reloadTab,
-  removeStorageValue,
+  sessionRepository,
   setStorageValue,
+  settingsRepository,
   traceError,
 } from "@/shared/lib";
 
@@ -52,27 +54,31 @@ export class SessionManagementError extends Error {
 }
 
 export async function initializeSessionManagement(): Promise<void> {
+  await migrateStorageState();
+  const settings = await settingsRepository.read();
+
   browserActionApi.setBadgeBackgroundColor({
-    color: extensionConfig.settings.default.badgeColor,
+    color: settings.badgeColor,
   });
   browserActionApi.setBadgeTextColor({
-    color: extensionConfig.settings.default.badgeTextColor,
+    color: settings.badgeTextColor,
   });
 
   await syncActiveTabBadge();
 }
 
 export function registerStorageDefaults(): void {
-  storage.defineItem(`local:${extensionConfig.keys.activeSessionId}`, {
-    init: () => "",
+  storage.defineItem(`local:${storageKeys.activeSessionId}`, {
+    init: () => null,
   });
-  storage.defineItem(`local:${extensionConfig.keys.sessions}`, {
+  storage.defineItem(`local:${storageKeys.sessions}`, {
     init: () => [],
   });
-  storage.defineItem(`sync:${extensionConfig.keys.settings}`, {
-    init: () => ({
-      ...extensionConfig.settings.default,
-    }),
+  storage.defineItem(`local:${storageKeys.schemaVersion}`, {
+    init: () => storageVersion,
+  });
+  storage.defineItem(`sync:${storageKeys.settings}`, {
+    init: () => defaultSettings,
   });
 }
 
@@ -81,7 +87,7 @@ export async function listSessionsForActiveTab(): Promise<
 > {
   try {
     const activeTabUrl = await requireSupportedActiveTabUrl();
-    const storedSessions = await readStoredSessions();
+    const storedSessions = await sessionRepository.readAll();
     const matchingSessions = filterSessionsForUrl(activeTabUrl, storedSessions);
     const activeTab = await getCurrentActiveTab();
 
@@ -159,7 +165,7 @@ export async function activateSession(payload?: {
     return { success: false, message: errorMessages.noSessionId };
   }
 
-  const storedSessions = await readStoredSessions();
+  const storedSessions = await sessionRepository.readAll();
   const targetSession = storedSessions.find(
     (session) => session.id === sessionId,
   );
@@ -184,7 +190,7 @@ export async function activateSession(payload?: {
 
   await clearStorageForCurrentTab();
   await applyStorageToCurrentTab(targetSession.state);
-  await setStorageValue(extensionConfig.keys.activeSessionId, sessionId);
+  await activeSessionRepository.write(sessionId);
   await syncActiveTabBadge();
 
   return {
@@ -207,7 +213,7 @@ export async function updateSession(payload?: {
     return { success: false, message: errorMessages.noSessionId };
   }
 
-  const storedSessions = await readStoredSessions();
+  const storedSessions = await sessionRepository.readAll();
   const sessionIndex = storedSessions.findIndex(
     (session) => session.id === sessionId,
   );
@@ -225,7 +231,7 @@ export async function updateSession(payload?: {
   const updatedSessions = [...storedSessions];
   updatedSessions[sessionIndex] = updatedSession;
 
-  await setStorageValue(extensionConfig.keys.sessions, updatedSessions);
+  await sessionRepository.writeAll(updatedSessions);
   await syncActiveTabBadge();
 
   return {
@@ -244,12 +250,17 @@ export async function deleteSession(payload?: {
     return { success: false, message: errorMessages.noSessionId };
   }
 
-  const storedSessions = await readStoredSessions();
+  const storedSessions = await sessionRepository.readAll();
   const remainingSessions = storedSessions.filter(
     (session) => session.id !== sessionId,
   );
 
-  await setStorageValue(extensionConfig.keys.sessions, remainingSessions);
+  await sessionRepository.writeAll(remainingSessions);
+
+  if ((await activeSessionRepository.read()) === sessionId) {
+    await activeSessionRepository.clear();
+  }
+
   await syncActiveTabBadge();
 
   return {
@@ -267,7 +278,7 @@ export async function createEmptySession(): Promise<MessageResponse> {
   }
 
   await clearStorageForCurrentTab();
-  await removeStorageValue(extensionConfig.keys.activeSessionId);
+  await activeSessionRepository.clear();
   await syncActiveTabBadge();
 
   return {
@@ -294,31 +305,30 @@ export async function reloadActiveTab(): Promise<MessageResponse> {
 export async function readActiveSessionId(): Promise<
   MessageResponse<string | null>
 > {
-  const activeSessionId = await getStorageValue<string>(
-    extensionConfig.keys.activeSessionId,
-  );
+  const activeSessionId = await activeSessionRepository.read();
 
   return {
     success: true,
     message: "Active session ID retrieved successfully",
-    data: activeSessionId || null,
+    data: activeSessionId,
   };
 }
 
 export async function syncActiveTabBadge(): Promise<void> {
   try {
     const activeTabUrl = await requireSupportedActiveTabUrl();
-    const storedSessions = await readStoredSessions();
+    const storedSessions = await sessionRepository.readAll();
+    const settings = await settingsRepository.read();
     const matchingSessions = filterSessionsForUrl(activeTabUrl, storedSessions);
 
-    if (matchingSessions.length === 0) {
+    if (!settings.showBadge || matchingSessions.length === 0) {
       browserActionApi.setBadgeText({ text: "" });
       return;
     }
 
     const badgeText =
-      matchingSessions.length > extensionConfig.settings.default.badgeMaxCount
-        ? `${extensionConfig.settings.default.badgeMaxCount}+`
+      matchingSessions.length > settings.badgeMaxCount
+        ? `${settings.badgeMaxCount}+`
         : matchingSessions.length.toString();
 
     browserActionApi.setBadgeText({ text: badgeText });
@@ -352,12 +362,6 @@ async function requireSupportedActiveTabUrl(): Promise<URL> {
   return parsedUrl;
 }
 
-async function readStoredSessions(): Promise<Session[]> {
-  return (
-    (await getStorageValue<Session[]>(extensionConfig.keys.sessions)) || []
-  );
-}
-
 async function readActiveTabStorageSafely() {
   try {
     return await getStorageFromCurrentTab();
@@ -368,11 +372,12 @@ async function readActiveTabStorageSafely() {
 }
 
 async function writeSession(newSession: Session): Promise<void> {
-  const storedSessions = await readStoredSessions();
+  const storedSessions = await sessionRepository.readAll();
   const updatedSessions = [...storedSessions, newSession];
 
-  await setStorageValue(extensionConfig.keys.sessions, updatedSessions);
-  await setStorageValue(extensionConfig.keys.activeSessionId, newSession.id);
+  await sessionRepository.writeAll(updatedSessions);
+  await activeSessionRepository.write(newSession.id);
+  await setStorageValue(storageKeys.schemaVersion, storageVersion);
 }
 
 async function navigateToSessionIfNeeded(

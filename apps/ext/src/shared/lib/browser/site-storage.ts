@@ -1,12 +1,26 @@
-import { type Browser, browser } from "#imports";
+import { browser } from "#imports";
 import { getCurrentActiveTab } from "@/shared/lib/browser/browser-tabs";
 import { getAllCookies, removeManyCookies } from "@/shared/lib/browser/cookies";
 import { traceError } from "@/shared/lib/monitoring/trace-error";
 
+export type SiteStorageCookie = {
+  domain: string;
+  expirationDate?: number;
+  hostOnly?: boolean;
+  httpOnly: boolean;
+  name: string;
+  path: string;
+  sameSite?: "no_restriction" | "lax" | "strict" | "unspecified";
+  secure: boolean;
+  session?: boolean;
+  storeId?: string;
+  value: string;
+};
+
 export type SiteStorageState = {
   localStorage: Record<string, string>;
   sessionStorage: Record<string, string>;
-  cookies: Browser.cookies.Cookie[];
+  cookies: SiteStorageCookie[];
 };
 
 export class SiteStorageError extends Error {
