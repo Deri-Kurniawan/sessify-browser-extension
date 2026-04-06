@@ -1,7 +1,7 @@
+import "@/styles/globals.css";
+import "@sessify/ui/styles/index.css";
 import React from "react";
 import ReactDOM from "react-dom/client";
-import "@sessify/ui/styles/index";
-import "@/styles/globals.css";
 import ExtensionApp from "./extension-app";
 
 export function mountExtensionApp(
