@@ -27,7 +27,7 @@
     "audit": "bun audit",
     "audit:fix": "bun audit --fix",
     "clean": "turbo run clean && rm -rf node_modules/.cache .turbo",
-    "clean:all": "find . -name 'node_modules' -type d -prune -exec rm -rf '{}' + && rm -rf .turbo",
+    "clean:all": "node scripts/clean-all.mjs",
     "typecheck": "turbo run check-types",
     "validate": "bun run lint && bun run check-types && bun run build",
     "pre-commit": "bun run format:write && bun run lint:write && bun run check-types && bun run build",
