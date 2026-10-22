@@ -71,12 +71,12 @@ const HeroSection = ({
 
             <Button asChild size="lg" variant="outline">
               <a
-                href="https://youtu.be/qLa0dN7h3XE?si=HBVLc9Q6BPbHpo_E"
+                href="https://youtu.be/0itLZYX0MyQ"
                 rel="noopener noreferrer"
                 target="_blank"
               >
                 <PlayIcon className="size-4" />
-                Learn in 5 minutes
+                Learn in 1 minute
               </a>
             </Button>
           </div>
