@@ -1,0 +1,46 @@
+{
+  "name": "campaign-video",
+  "version": "1.0.0",
+  "description": "Sessify Browser Extension Campaign Video",
+  "repository": {},
+  "license": "UNLICENSED",
+  "engines": {
+    "node": "^20.19.0 || ^22.13.0 || >=24"
+  },
+  "private": true,
+  "dependencies": {
+    "@remotion/cli": "4.0.537",
+    "@remotion/fonts": "4.0.537",
+    "@remotion/media": "4.0.537",
+    "@sessify/ui": "workspace:*",
+    "lucide-react": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "remotion": "4.0.537"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "catalog:",
+    "@remotion/tailwind-v4": "4.0.537",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "@types/web": "0.0.166",
+    "tailwindcss": "catalog:",
+    "typescript": "catalog:"
+  },
+  "scripts": {
+    "preinstall": "bun generate:audio",
+    "dev": "remotion studio",
+    "generate:audio": "node ./scripts/generate-audio.mjs",
+    "build": "remotion bundle --out-dir=dist --bundle-cache=false",
+    "upgrade": "remotion upgrade",
+    "lint": "biome check ./src",
+    "lint:write": "biome check --write ./src",
+    "format": "biome format ./src",
+    "format:write": "biome format --write ./src",
+    "check-types": "tsc --noEmit",
+    "clean": "rm -rf out dist .turbo"
+  },
+  "allowScripts": {
+    "esbuild": false
+  }
+}

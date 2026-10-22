@@ -22,7 +22,11 @@
       "!**/wrangler.jsonc",
       "!**/.source",
       "!**/bun.lock",
-      "!**/.wxt"
+      "!**/.wxt",
+      "!**/.agents",
+      "!**/.claude",
+      "!**/skills-lock.json",
+      "!**/studio.log"
     ]
   },
   "formatter": {
@@ -83,5 +87,20 @@
         "noStaticElementInteractions": "off"
       }
     }
-  }
+  },
+  "overrides": [
+    {
+      "includes": ["apps/campaign-video/**"],
+      "linter": {
+        "rules": {
+          "complexity": {
+            "noExcessiveCognitiveComplexity": "off"
+          },
+          "suspicious": {
+            "noArrayIndexKey": "off"
+          }
+        }
+      }
+    }
+  ]
 }

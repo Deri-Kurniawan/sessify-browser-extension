@@ -16,6 +16,7 @@
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev",
+    "dev:cv": "turbo run dev --filter=campaign-video",
     "dev:ext": "turbo run dev --filter=ext",
     "dev:web": "turbo run dev --filter=web",
     "lint": "turbo run lint",

@@ -1,0 +1,45 @@
+export const C = {
+  void: "#070912",
+  bg: "#0b0e1a",
+  bg2: "#111629",
+  panel: "#151b31",
+  panel2: "#1b2340",
+  panel3: "#232d52",
+  ink: "#050711",
+  white: "#f8f5e9",
+  cream: "#f2ecdb",
+  muted: "#9aa4c2",
+  dim: "#667097",
+  cyan: "#64e6ff",
+  blue: "#4f8cff",
+  lime: "#b8f27a",
+  pink: "#ff6f9f",
+  amber: "#ffd166",
+  orange: "#ff9f5a",
+  red: "#ff5c67",
+  purple: "#b18cff",
+  grid: "rgba(100, 230, 255, 0.065)",
+  gridStrong: "rgba(100, 230, 255, 0.13)",
+} as const;
+
+export const UI = {
+  background: "#ffffff",
+  surface: "#fafafa",
+  surface2: "#f5f5f5",
+  border: "#e5e5e5",
+  borderDark: "#d4d4d4",
+  text: "#171717",
+  textSoft: "#404040",
+  muted: "#737373",
+  mutedLight: "#9ca3af",
+  primary: "#252525",
+  primaryFg: "#fafafa",
+  blue: "#2b7fff",
+  blueDark: "#2563eb",
+  red: "#fb2c36",
+  redDark: "#e7000b",
+  shadow: "0 1px 3px 0 rgba(0,0,0,0.1), 0 1px 2px -1px rgba(0,0,0,0.1)",
+} as const;
+
+export const PIXEL_SHADOW = "8px 8px 0 rgba(0,0,0,0.45)";
+export const PIXEL_SHADOW_SM = "4px 4px 0 rgba(0,0,0,0.45)";

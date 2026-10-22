@@ -1,0 +1,4 @@
+@import "../../../packages/ui/src/styles/index.css";
+
+@source "./**/*.{ts,tsx}";
+@source "../../../packages/ui/src/**/*.{ts,tsx}";
