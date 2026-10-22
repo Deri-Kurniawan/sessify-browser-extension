@@ -117,8 +117,10 @@ const SessionDetailDialog: FC<SessionDetailDialogProps> = ({
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="max-h-[80vh] overflow-y-auto sm:max-w-150">
         <DialogHeader>
-          <DialogTitle>Session Details</DialogTitle>
-          <DialogDescription>
+          <DialogTitle className="mx-auto max-w-4/5 sm:mx-0">
+            Session Details
+          </DialogTitle>
+          <DialogDescription className="text-center sm:text-left">
             Details about the session and its stored data.
           </DialogDescription>
         </DialogHeader>

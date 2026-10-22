@@ -119,10 +119,10 @@ function SessionCard({
           </Tooltip>
           <DialogContent className="max-h-screen overflow-y-auto">
             <DialogHeader>
-              <DialogTitle>
+              <DialogTitle className="mx-auto max-w-4/5 sm:mx-0">
                 Are you sure you want to delete this session?
               </DialogTitle>
-              <DialogDescription>
+              <DialogDescription className="text-center sm:text-left">
                 This action cannot be undone.
               </DialogDescription>
             </DialogHeader>
@@ -233,8 +233,10 @@ const SessionsPage = () => {
           </Tooltip>
           <DialogContent className="max-h-screen overflow-y-auto">
             <DialogHeader>
-              <DialogTitle>Create a new session?</DialogTitle>
-              <DialogDescription>
+              <DialogTitle className="mx-auto max-w-4/5 sm:mx-0">
+                Create a new session?
+              </DialogTitle>
+              <DialogDescription className="text-center sm:text-left">
                 Have you saved your current session? We will clear your current
                 session&apos;s tabs.
               </DialogDescription>
