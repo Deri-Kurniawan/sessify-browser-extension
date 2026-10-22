@@ -2,6 +2,8 @@
 
 A comprehensive platform for managing and switching between multiple browser sessions efficiently, featuring a browser extension and web application.
 
+![Cover Image](./cover.webp)
+
 ---
 
 ## 🚀 Features
