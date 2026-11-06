@@ -17,7 +17,7 @@ export function bootstrapBackground() {
   void initializeSessionManagement();
 
   browser.runtime.onInstalled.addListener(() => {
-    console.log(`${browser.runtime.getManifest().name} extension installed.`);
+    console.info(`${browser.runtime.getManifest().name} extension installed.`);
 
     browser.runtime.setUninstallURL(
       `${browser.runtime.getManifest().homepage_url as string}/feedback?ref=uninstall`,
