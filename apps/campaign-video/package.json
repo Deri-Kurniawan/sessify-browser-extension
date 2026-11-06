@@ -32,6 +32,7 @@
     "dev": "remotion studio",
     "generate:audio": "node ./scripts/generate-audio.mjs",
     "build": "remotion bundle --out-dir=dist --bundle-cache=false",
+    "render": "bun run generate:audio && bun run build && remotion render dist SessifyIntro out/video.mp4",
     "upgrade": "remotion upgrade",
     "lint": "biome check ./src",
     "lint:write": "biome check --write ./src",
